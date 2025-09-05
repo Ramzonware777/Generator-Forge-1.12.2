@@ -1,19 +1,38 @@
-name: Minecraft Forge for @minecraft (@buildfileversion)
-basefeatures: [variables, model_json, model_obj, model_java]
-partial_support: [loottable, recipe, block, achievement, mob, keybind]
+name: Forge for @minecraft (@buildfileversion)
 status: deprecated
 buildfileversion: 14.23.5.2860
-subversion: 1.0.0
+subversion: 1.0 # force setup re-run to update build script for MCREATOR_JVM_OPTIONS
+
+import:
+  - datapack-1.12.x
 
 start_id_map:
   dimension: 2
 
+java_models:
+  key: legacy
+  requested_key_words: [ModelRenderer, ~ModelPart, ~texHeight, ~(ResourceLocation.]
+
 # gradle task definitions
 gradle:
-  setup_task: eclipse
   run_client: runClient
   run_server: runServer
   export_file: "build/libs/modid-1.0.jar"
+
+import_formatter:
+  duplicates_whitelist:
+    - java.util
+    - net.minecraft
+  priority_imports:
+    Material: net.minecraft.block.material
+    Nullable: javax.annotation
+    SoundEvent: net.minecraft.util
+    Blocks: net.minecraft.block
+    Items: net.minecraft.item
+    Multimap: com.google.common.collect
+    ImmutableSet: com.google.common.collect
+    Iterables: com.google.common.collect
+    Attributes: net.minecraft.entity.ai.attributes
 
 # base generator roots
 source_root: "@WORKSPACEROOT/src/main/java"
@@ -21,39 +40,67 @@ res_root: "@WORKSPACEROOT/src/main/resources"
 mod_assets_root: "@RESROOT/assets/@modid"
 
 # specific resource folders
-structures_dir: "@MODASSETSROOT/structures"
 sounds_dir: "@MODASSETSROOT/sounds"
-other_textures_dir: "@MODASSETSROOT/textures"
-block_textures_dir: "@MODASSETSROOT/textures/blocks"
-item_textures_dir: "@MODASSETSROOT/textures/items"
+structures_dir: "@MODASSETSROOT/structures"
+block_textures_dir: "@MODASSETSROOT/textures/block"
+item_textures_dir: "@MODASSETSROOT/textures/item"
+entity_textures_dir: "@MODASSETSROOT/textures/entities"
+effect_textures_dir: "@MODASSETSROOT/textures/mob_effect"
+particle_textures_dir: "@MODASSETSROOT/textures/particle"
+screen_textures_dir: "@MODASSETSROOT/textures/screens"
 armor_textures_dir: "@MODASSETSROOT/textures/models/armor"
+other_textures_dir: "@MODASSETSROOT/textures"
+
+# vanilla resources
+vanilla_resources_jar: "client-extra.jar"
+vanilla_block_textures_dir: "assets/minecraft/textures/block"
+vanilla_item_textures_dir: "assets/minecraft/textures/item"
 
 base_templates:
-  - template: modbase/modelements.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/Elements@JavaModName.java"
   - template: modbase/mod.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/@JavaModName.java"
-    canLock: true
-  - template: modbase/iproxy.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/IProxy@JavaModName.java"
-    canLock: true
-  - template: modbase/serverproxy.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/ServerProxy@JavaModName.java"
-    canLock: true
-  - template: modbase/clientproxy.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/ClientProxy@JavaModName.java"
-    canLock: true
-  - template: modbase/variableslist.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/@JavaModNameVariables.java"
+  - template: modbase/mcmod.info.ftl
+    usercodeComment: "#"
+    writer: file
+    name: "@RESROOT/mcmod.info"
+  - template: pack.mcmeta.ftl # loaded from datapack generator
+    writer: json
+    name: "@RESROOT/pack.mcmeta"
   - template: modbase/sounds.json.ftl
     writer: json
     name: "@MODASSETSROOT/sounds.json"
-  - template: modbase/pack.mcmeta.ftl
-    writer: json
-    name: "@RESROOT/pack.mcmeta"
-  - template: modbase/mcmod.info.ftl
-    writer: json
-    name: "@RESROOT/mcmod.info"
+    condition: hasSounds()
+  - template: elementinits/sounds.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameSounds.java"
+    condition: hasSounds()
+  - template: modbase/variableslist.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/network/@JavaModNameVariables.java"
+    condition: hasVariables()
+  - template: elementinits/tabs.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameTabs.java"
+    condition: hasItemsInTabs()
+  - template: modbase/accesstransformer.cfg.ftl
+    usercodeComment: "#"
+    writer: file
+    name: "@RESROOT/META-INF/accesstransformer.cfg"
+    condition_any:
+      - "${w.getGElementsOfType('gamerule')?filter(e -> e.type.equals('Number') || e.type.equals('Logic'))?size != 0}"
+      - "${w.getGElementsOfType('projectile')?filter(e -> (e.modelWidth > 0.5) || (e.modelHeight > 0.5))?size != 0}"
+      - "${w.hasElementsOfType('villagerprofession')}"
+  - template: elementinits/features.java.ftl
+    writer: java
+    condition_any:
+      - "${w.getGElementsOfType('block')?filter(e -> e.generateFeature)?size != 0}"
+      - "${w.getGElementsOfType('plant')?filter(e -> e.generateFeature)?size != 0}"
+      - "${w.hasElementsOfType('feature')}"
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameFeatures.java"
+
+sources_setup_tasks:
+  - task: copy_models
+    type: JAVA_viatemplate
+    cleanupBeforeCopy: true
+    template: javamodel.java.ftl
+    to: "@SRCROOT/@BASEPACKAGEPATH/client/model"
 
 language_file:
   format: keyvalue
@@ -65,7 +112,8 @@ resources_setup_tasks:
     from: "@MODASSETSROOT/textures/@modpicture.png"
     to: "@RESROOT/logo.png"
   - task: copy_models
-    type: OBJ
+    type: OBJ_inlinetextures
+    prefix: "@modid:block/"
     to: "@MODASSETSROOT/models/item"
   - task: copy_models
     type: JSON_noinlinetextures

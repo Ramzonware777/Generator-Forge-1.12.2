@@ -1,7 +1,5 @@
 _default: CreativeTabs.MISC
-_mcreator_prefix: "CUSTOM:"
-_mcreator_map_template: "Tab@NAME.tab"
-No creative tab entry: null
+_mcreator_map_template: "@JavaModNameTabs.TAB_@REGISTRYNAME"
 BUILDING_BLOCKS: CreativeTabs.BUILDING_BLOCKS
 DECORATIONS: CreativeTabs.DECORATIONS
 REDSTONE: CreativeTabs.REDSTONE
@@ -12,3 +10,4 @@ TOOLS: CreativeTabs.TOOLS
 COMBAT: CreativeTabs.COMBAT
 BREWING: CreativeTabs.BREWING
 MATERIALS: CreativeTabs.MATERIALS
+OP_BLOCKS: CreativeTabs.SEARCH

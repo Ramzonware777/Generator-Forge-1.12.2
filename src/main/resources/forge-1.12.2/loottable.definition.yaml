@@ -1,6 +1,10 @@
 templates:
-  - template: json/loottable.json.ftl
+  - template: loottable.json.ftl # loaded from datapack generator
     writer: json
     name: "@MODASSETSROOT/loot_tables/@[getName()].json"
-  - template: loottable.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/util/LootTable@NAME.java"
+
+global_templates:
+  - template: elementinits/loottables.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameLoottables.java"
+
+field_exclusions: [silkTouchMode, affectedByFortune, explosionDecay]

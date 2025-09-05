@@ -1,0 +1,9 @@
+[{
+  "modid": "packloader",
+  "name": "packloader",
+  "description": "This is a mod loaded by MCreator to force resource pack loading",
+  "version": "1.0.0",
+  "mcversion": "1.12.2",
+  "url": "https://mcreator.net",
+  "authorList": ["Pylo"]
+}]

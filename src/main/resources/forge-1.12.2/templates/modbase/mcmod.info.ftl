@@ -21,10 +21,6 @@
 <#if settings.getModPicture()?has_content>
   "logoFile": "/logo.png",
 </#if>
-
-# Start of user code block mod configuration
-# End of user code block mod configuration
-
   "requiredMods": [
 <#list settings.getRequiredMods() as e>
       "${e}"<#if e?has_next>,</#if>
@@ -42,7 +38,4 @@
 </#list>
   ],
   "useDependencyInformation": "true"
-
-# Start of user code block dependencies configuration
-# End of user code block dependencies configuration
 }]

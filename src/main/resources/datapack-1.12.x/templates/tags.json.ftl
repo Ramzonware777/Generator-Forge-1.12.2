@@ -1,0 +1,24 @@
+<#include "mcitems.ftl">
+{
+    "replace": false,
+    "values": [
+      <#if type == "items" || type == "blocks">
+          <#list w.normalizeTagElements(tag.resourcePath(), 1, elements) as value>
+			<@tagEntry value mappedMCItemToRegistryName(value, true)/><#sep>,
+          </#list>
+      <#elseif type == "entities">
+          <#list w.normalizeTagElements(tag.resourcePath(), 2, elements) as value>
+			<@tagEntry value value.getMappedValue(2)/><#sep>,
+          </#list>
+      <#elseif type == "functions">
+          <#list w.filterBrokenReferences(elements) as value>
+			<@tagEntry value generator.getResourceLocationForModElement(value)/><#sep>,
+          </#list>
+      </#if>
+    ]
+}
+
+<#macro tagEntry valueObject name>
+	<#-- make external entries and tag entries optional -->
+		"${name}"
+</#macro>
