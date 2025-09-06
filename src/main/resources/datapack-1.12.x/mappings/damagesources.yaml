@@ -56,12 +56,6 @@ WITHER:
 DRAGON_BREATH:
   - DamageSource.DRAGON_BREATH
   - dragonBreath
-DRYOUT:
-  - DamageSource.DRYOUT
-  - dryout
-SWEET_BERRY_BUSH:
-  - DamageSource.SWEET_BERRY_BUSH
-  - sweetBerryBush
 FALLING_BLOCK:
   - DamageSource.FALLING_BLOCK
   - fallingBlock

@@ -29,12 +29,11 @@ scopes:
     read: instance.${var.getName()} = nbt.getString("${var.getName()}");
     write: nbt.setString("${var.getName()}", instance.${var.getName()});
     get: |
-      ((${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null)
-        .orElse(new ${JavaModName}Variables.PlayerVariables())).${name})
+      (${JavaModName}Variables.PlayerVariables.orElse(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null)).${name})
     set: |
       {
         String _setval = ${opt.removeParentheses(value)};
-        ${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        ${JavaModName}Variables.PlayerVariables.ifPresent(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), capability -> {
           capability.${name} = _setval;
           capability.syncPlayerVariables(${entity});
         });
@@ -44,12 +43,11 @@ scopes:
     read: instance.${var.getName()} = nbt.getString("${var.getName()}");
     write: nbt.setString("${var.getName()}", instance.${var.getName()});
     get: |
-      ((${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null)
-        .orElse(new ${JavaModName}Variables.PlayerVariables())).${name})
+      (${JavaModName}Variables.PlayerVariables.orElse(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null)).${name})
     set: |
       {
         String _setval = ${opt.removeParentheses(value)};
-        ${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        ${JavaModName}Variables.PlayerVariables.ifPresent(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), capability -> {
           capability.${name} = _setval;
           capability.syncPlayerVariables(${entity});
         });

@@ -1,15 +1,18 @@
-@SubscribeEvent public void onBlockBreak(BlockEvent.BreakEvent event){
-	Entity entity = event.getPlayer();
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("xpAmount",event.getExpToDrop());
-	dependencies.put("x",event.getPos().getX());
-	dependencies.put("y",event.getPos().getY());
-	dependencies.put("z",event.getPos().getZ());
-	dependencies.put("px",entity.posX);
-	dependencies.put("py",entity.posY);
-	dependencies.put("pz",entity.posZ);
-	dependencies.put("world",event.getWorld().getWorld());
-	dependencies.put("entity",entity);
-	dependencies.put("event",event);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onBlockBreak(BlockEvent.BreakEvent event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getPos().getX()",
+			"y": "event.getPos().getY()",
+			"z": "event.getPos().getZ()",
+			"px": "event.getPlayer().posX",
+			"py": "event.getPlayer().posY",
+			"pz": "event.getPlayer().posZ",
+			"world": "event.getWorld()",
+			"entity": "event.getPlayer()",
+			"blockstate": "event.getState()"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

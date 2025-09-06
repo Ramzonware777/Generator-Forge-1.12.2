@@ -59,6 +59,10 @@ vanilla_item_textures_dir: "assets/minecraft/textures/item"
 base_templates:
   - template: modbase/mod.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/@JavaModName.java"
+  - template: modbase/commonproxy.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/network/@JavaModNameCommonProxy.java"
+  - template: modbase/clientproxy.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/network/@JavaModNameClientProxy.java"
   - template: modbase/mcmod.info.ftl
     usercodeComment: "#"
     writer: file

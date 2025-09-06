@@ -4,10 +4,14 @@ package ${package};
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = ${JavaModName}.MODID, version = "${settings.getVersion()}"
+@Mod(modid = ${JavaModName}.MODID
 <#if settings.isServerSideOnly()>, acceptableRemoteVersions = "*"</#if>) public class ${JavaModName} {
 	public static final Logger LOGGER = LogManager.getLogger(${JavaModName}.class);
 	public static final String MODID = "${modid}";
+
+	@SidedProxy(modId = ${JavaModName}.MODID, clientSide = "${package}.network.${JavaModName}ClientProxy", serverSide = "${package}.network.${JavaModName}CommonProxy")
+	public static ${JavaModName}CommonProxy proxy;
+
     @Mod.Instance(MODID) public static ${JavaModName} instance;
 
 	@Mod.EventHandler public void preInit(FMLPreInitializationEvent event) {
@@ -15,14 +19,13 @@ import org.apache.logging.log4j.Logger;
 		// End of user code block mod constructor
 		MinecraftForge.EVENT_BUS.register(this);
 
+		<#if w.hasVariables()>${JavaModName}Variables.init();</#if>
+
+		proxy.preInit(event);
 		// Start of user code block mod init
 		// End of user code block mod init
 	}
 
-	// Start of user code block mod methods
-	// End of user code block mod methods
-
-	private static final String PROTOCOL_VERSION = "1";
 	public static final SimpleNetworkWrapper PACKET_HANDLER = NetworkRegistry.INSTANCE.newSimpleChannel("${modid[0..*18]}:a");
 
 	private static int messageID = 0;
@@ -33,6 +36,26 @@ import org.apache.logging.log4j.Logger;
 		messageID++;
 	}
 
+	@Mod.EventHandler public void init(FMLInitializationEvent event) {
+		proxy.init(event);
+	}
+
+	@Mod.EventHandler public void postInit(FMLPostInitializationEvent event) {
+		proxy.postInit(event);
+	}
+
+    @Mod.EventHandler public void serverLoad(FMLServerStartingEvent event) {
+		proxy.serverLoad(event);
+	}
+
+	static {
+	    FluidRegistry.enableUniversalBucket();
+	}
+
+	// Start of user code block mod methods
+	// End of user code block mod methods
+
+	<#-- Wait procedure block support below -->
 	private static final Collection<AbstractMap.SimpleEntry<Runnable, Integer>> workQueue = new ConcurrentLinkedQueue<>();
 
 	public static void queueServerWork(int tick, Runnable action) {

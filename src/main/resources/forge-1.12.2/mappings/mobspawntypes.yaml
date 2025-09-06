@@ -2,4 +2,8 @@ _default: EnumCreatureType.MONSTER
 monster: EnumCreatureType.MONSTER
 creature: EnumCreatureType.CREATURE
 ambient: EnumCreatureType.AMBIENT
+undergroundWaterCreature: EnumCreatureType.WATER_CREATURE
 waterCreature: EnumCreatureType.WATER_CREATURE
+waterAmbient: EnumCreatureType.WATER_CREATURE
+misc: EnumCreatureType.AMBIENT
+axolotls: EnumCreatureType.WATER_CREATURE

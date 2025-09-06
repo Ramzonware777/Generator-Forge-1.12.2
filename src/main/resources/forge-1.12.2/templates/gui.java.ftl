@@ -224,7 +224,7 @@ package ${package}.gui;
 		}
 
 		@Override protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
-			GL11.glColor4f(1, 1, 1, 1);
+			GL11.glcolor(1, 1, 1, 1);
 
 			<#if data.renderBgLayer>
 			this.mc.renderEngine.bindTexture(texture);

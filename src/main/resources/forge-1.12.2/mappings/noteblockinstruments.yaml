@@ -1,0 +1,11 @@
+_default: NoteBlockEvent.Instrument.PIANO
+harp: NoteBlockEvent.Instrument.PIANO
+basedrum: NoteBlockEvent.Instrument.BASSDRUM
+snare: NoteBlockEvent.Instrument.SNARE
+hat: NoteBlockEvent.Instrument.CLICKS
+bass: NoteBlockEvent.Instrument.BASSGUITAR
+flute: NoteBlockEvent.Instrument.FLUTE
+bell: NoteBlockEvent.Instrument.BELL
+guitar: NoteBlockEvent.Instrument.GUITAR
+chime: NoteBlockEvent.Instrument.CHIME
+xylophone: NoteBlockEvent.Instrument.XYLOPHONE

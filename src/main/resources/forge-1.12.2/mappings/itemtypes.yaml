@@ -1,0 +1,16 @@
+_default: ""
+Sword: Sword
+Pickaxe: Pickaxe
+Axe: Axe
+Shovel: Spade
+Hoe: Hoe
+Armor: Armor
+Banner: Banner
+Bed: Bed
+Block: Block
+Boat: Boat
+Bow: Bow
+Dye: Dye
+Potion: Potion
+Shield: Shield
+SpawnEgg: MonsterPlacer

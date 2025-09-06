@@ -1,71 +1,73 @@
+<#--
+ # MCreator (https://mcreator.net/)
+ # Copyright (C) 2012-2020, Pylo
+ # Copyright (C) 2020-2024, Pylo, opensource contributors
+ #
+ # This program is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # This program is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ #
+ # Additional permission for code generator templates (*.ftl files)
+ #
+ # As a special exception, you may create a larger work that contains part or
+ # all of the MCreator code generator templates (*.ftl files) and distribute
+ # that work under terms of your choice, so long as that work isn't itself a
+ # template for code generation. Alternatively, if you modify or redistribute
+ # the template itself, you may (at your option) remove this special exception,
+ # which will cause the template and the resulting code generator output files
+ # to be licensed under the GNU General Public License without this special
+ # exception.
+-->
+
 <#-- @formatter:off -->
 <#include "procedures.java.ftl">
-
 package ${package}.command;
-
-@Elements${JavaModName}.ModElement.Tag public class Command${name} extends Elements${JavaModName}.ModElement{
-
-	public Command${name} (Elements${JavaModName} instance) {
-		super(instance, ${data.getModElement().getSortID()});
-	}
-
-	@Override public void serverLoad(FMLServerStartingEvent event) {
-		event.registerServerCommand(new CommandHandler());
-	}
-
-	public static class CommandHandler implements ICommand {
-
-		@Override public int compareTo(ICommand c) {
-			return getName().compareTo(c.getName());
+@Mod.EventBusSubscriber<#if data.type == "CLIENTSIDE">(value = Dist.CLIENT)</#if>
+public class ${name}Command extends CommandBase {
+		@SubscribeEvent public static void registerCommand(FMLServerStartingEvent event) {
+			<#if data.type == "MULTIPLAYER_ONLY">
+				if (event.getServer().isDedicatedServer())
+					<@commandRegistrationCode/>
+			<#elseif data.type == "SINGLEPLAYER_ONLY">
+				if (!event.getServer().isDedicatedServer())
+					<@commandRegistrationCode/>
+			<#else>
+				<@commandRegistrationCode/>
+			</#if>
 		}
 
-		@Override public boolean checkPermission(MinecraftServer server, ICommandSender var1) {
-			return true;
-		}
+    public String getName() {
+        return "${data.commandName}";
+    }
 
-		@Override public List getAliases() {
-			return new ArrayList();
-		}
+    public int getRequiredPermissionLevel() {
+        return ${data.permissionLevel?replace("No requirement", 0)};
+    }
 
-		@Override
-		public List getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-			return new ArrayList();
-		}
+    public void execute(MinecraftServer server, ICommandSender arguments, String[] args) throws CommandException {
+        ${argscode}
+    }
 
-		@Override public boolean isUsernameIndex(String[] string, int index) {
-			return true;
-		}
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender arguments, String[] args, @Nullable BlockPos targetPos){
+        ${argscode}
+    }
 
-		@Override public String getName() {
-			return "${data.commandName}";
-		}
+    public boolean isUsernameIndex(String[] args, int index) {
+        ${argscode}
+    }
 
-		@Override public String getUsage(ICommandSender var1) {
-			return "/${data.commandName} [<arguments>]";
-		}
-
-		@Override public void execute(MinecraftServer server, ICommandSender sender, String[] cmd) {
-			<#if hasProcedure(data.onCommandExecuted)>
-				int x = sender.getPosition().getX();
-				int y = sender.getPosition().getY();
-				int z = sender.getPosition().getZ();
-				Entity entity = sender.getCommandSenderEntity();
-				if (entity != null) {
-					World world = entity.world;
-
-					HashMap<String, String> cmdparams = new HashMap<>();
-					int[] index = { 0 };
-					Arrays.stream(cmd).forEach(param -> {
-						cmdparams.put(Integer.toString(index[0]), param);
-						index[0]++;
-					});
-
-                    <@procedureOBJToCode data.onCommandExecuted/>
-				}
-            </#if>
-		}
-
-	}
-
+	${extra_templates_code}
 }
+<#macro commandRegistrationCode>
+	event.registerServerCommand(new ${name}Command());
+</#macro>
 <#-- @formatter:on -->

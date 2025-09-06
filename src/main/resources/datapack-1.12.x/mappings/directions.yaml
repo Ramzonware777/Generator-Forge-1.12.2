@@ -1,18 +1,18 @@
 DOWN:
-  - Direction.DOWN
+  - EnumFacing.DOWN
   - down
 UP:
-  - Direction.UP
+  - EnumFacing.UP
   - up
 NORTH:
-  - Direction.NORTH
+  - EnumFacing.NORTH
   - north
 SOUTH:
-  - Direction.SOUTH
+  - EnumFacing.SOUTH
   - south
 WEST:
-  - Direction.WEST
+  - EnumFacing.WEST
   - west
 EAST:
-  - Direction.EAST
+  - EnumFacing.EAST
   - east
