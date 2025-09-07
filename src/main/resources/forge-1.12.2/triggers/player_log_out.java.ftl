@@ -1,11 +1,15 @@
-@SubscribeEvent public void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event){
-	Entity entity = event.player;
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("x",entity.posX);
-	dependencies.put("y",entity.posY);
-	dependencies.put("z",entity.posZ);
-	dependencies.put("world",entity.world);
-	dependencies.put("entity",entity);
-	dependencies.put("event",event);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.player.posX",
+			"y": "event.player.posY",
+			"z": "event.player.posZ",
+			"world": "event.player.world",
+			"entity": "event.player",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

@@ -1,7 +1,11 @@
-@SubscribeEvent public void onWorldLoad(WorldEvent.Load event){
-		World world=event.getWorld().getWorld();
-		Map<String, Object> dependencies = new HashMap<>();
-		dependencies.put("world",world);
-		dependencies.put("event",event);
-		this.executeProcedure(dependencies);
-		}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onWorldLoad(WorldEvent.Load event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"world": "event.getWorld()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

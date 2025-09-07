@@ -1,13 +1,17 @@
-@SubscribeEvent public void onFarmlandTrampled(BlockEvent.FarmlandTrampleEvent event){
-	Entity entity = event.getEntity();
-	float falldistance = event.getFallDistance();
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("x",event.getPos().getX());
-	dependencies.put("y",event.getPos().getY());
-	dependencies.put("z",event.getPos().getZ());
-	dependencies.put("world",event.getWorld().getWorld());
-	dependencies.put("entity",entity);
-	dependencies.put("falldistance",falldistance);
-	dependencies.put("event",event);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onFarmlandTrampled(BlockEvent.FarmlandTrampleEvent event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getPos().getX()",
+			"y": "event.getPos().getY()",
+			"z": "event.getPos().getZ()",
+			"world": "event.getWorld()",
+			"entity": "event.getEntity()",
+			"blockstate": "event.getState()",
+			"falldistance": "event.getFallDistance()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

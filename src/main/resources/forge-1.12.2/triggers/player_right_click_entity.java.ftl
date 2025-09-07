@@ -1,21 +1,18 @@
-@SubscribeEvent public void onRightClickEntity(PlayerInteractEvent.EntityInteract event) {
-	Entity entity=event.getTarget();
-	EntityPlayer sourceentity=event.getEntityPlayer();
-
-	if (event.getHand() != sourceentity.getActiveHand())
-		return;
-
-	int i=event.getPos().getX();
-	int j=event.getPos().getY();
-	int k=event.getPos().getZ();
-	World world=event.getWorld();
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("x", i);
-	dependencies.put("y", j);
-	dependencies.put("z", k);
-	dependencies.put("world" ,world);
-	dependencies.put("entity" ,entity);
-	dependencies.put("sourceentity" ,sourceentity);
-	dependencies.put("event",event);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onRightClickEntity(PlayerInteractEvent.EntityInteract event) {
+		<#-- fix #5491, event is fired for both hands always, so we can filter by either -->
+		if (event.getHand() != EnumHand.MAIN_HAND) return;
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getPos().getX()",
+			"y": "event.getPos().getY()",
+			"z": "event.getPos().getZ()",
+			"world": "event.getWorld()",
+			"entity": "event.getTarget()",
+			"sourceentity": "event.getEntityPlayer()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

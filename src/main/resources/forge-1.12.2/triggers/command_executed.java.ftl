@@ -1,18 +1,21 @@
-@SubscribeEvent public void onCommand(CommandEvent event){
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+    // TODO
+	@SubscribeEvent public static void onCommand(CommandEvent event) {
 		Entity entity = event.getSender().getCommandSenderEntity();
-		if(entity != null){
-		double i=entity.getPosition().getX();
-		double j=entity.getPosition().getY();
-		double k=entity.getPosition().getZ();
-		String command=event.getCommand().getName();
-		Map<String, Object> dependencies = new HashMap<>();
-		dependencies.put("x" ,i);
-		dependencies.put("y" ,j);
-		dependencies.put("z" ,k);
-		dependencies.put("world" ,entity.world);
-		dependencies.put("entity" ,entity);
-		dependencies.put("command" ,command);
-		dependencies.put("event",event);
-		this.executeProcedure(dependencies);
+		if (entity != null) {
+			<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+				"x": "entity.posX",
+				"y": "entity.posY",
+				"z": "entity.posZ",
+				"world": "entity.world",
+				"entity": "entity",
+				"command": "event.getParseResults().getReader().getString()",
+				"arguments": "event.getParseResults().getContext().build(event.getParseResults().getReader().getString())",
+				"event": "event"
+				}/>
+			</#compress></#assign>
+			execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
 		}
-		}
+	}

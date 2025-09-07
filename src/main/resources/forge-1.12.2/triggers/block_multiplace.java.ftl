@@ -1,14 +1,20 @@
-@SubscribeEvent public void onBlockMultiPlace(BlockEvent.EntityMultiPlaceEvent event) {
-	Entity entity = event.getEntity();
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("x",event.getPos().getX());
-	dependencies.put("y",event.getPos().getY());
-	dependencies.put("z",event.getPos().getZ());
-	dependencies.put("px",entity.posX);
-	dependencies.put("py",entity.posY);
-	dependencies.put("pz",entity.posZ);
-	dependencies.put("world",event.getWorld().getWorld());
-	dependencies.put("entity",entity);
-	dependencies.put("event",event);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onBlockMultiPlace(BlockEvent.EntityMultiPlaceEvent event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getPos().getX()",
+			"y": "event.getPos().getY()",
+			"z": "event.getPos().getZ()",
+			"px": "event.getEntity().posX",
+			"py": "event.getEntity().posY",
+			"pz": "event.getEntity().posZ",
+			"world": "event.getWorld()",
+			"entity": "event.getEntity()",
+			"blockstate": "event.getState()",
+			"placedagainst": "event.getPlacedAgainst()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

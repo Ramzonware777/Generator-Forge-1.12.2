@@ -1,15 +1,15 @@
-@SubscribeEvent public void onEntityTick(LivingEvent.LivingUpdateEvent event){
-	Entity entity = event.getEntityLiving();
-	World world = entity.world;
-	double i = entity.posX;
-	double j = entity.posY;
-	double k = entity.posZ;
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("x", i);
-	dependencies.put("y", j);
-	dependencies.put("z", k);
-	dependencies.put("world", world);
-	dependencies.put("entity", entity);
-	dependencies.put("event", event);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onEntityTick(LivingEvent.LivingUpdateEvent event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getEntityLiving().posX",
+			"y": "event.getEntityLiving().posY",
+			"z": "event.getEntityLiving().posZ",
+			"world": "event.getEntityLiving().world",
+			"entity": "event.getEntityLiving()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

@@ -1,19 +1,18 @@
-@SubscribeEvent public void onPlayerCriticalHit(CriticalHitEvent event) {
-	Entity entity=event.getTarget();
-	EntityPlayer sourceentity=event.getEntityPlayer();
-	double i=sourceentity.posX;
-	double j=sourceentity.posY;
-	double k=sourceentity.posZ;
-	World world=sourceentity.world;
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("x", i);
-	dependencies.put("y", j);
-	dependencies.put("z", k);
-	dependencies.put("world", world);
-	dependencies.put("entity", entity);
-	dependencies.put("sourceentity", sourceentity);
-	dependencies.put("damagemodifier", event.getDamageModifier());
-	dependencies.put("isvanillacritical", event.isVanillaCritical());
-	dependencies.put("event", event);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onPlayerCriticalHit(CriticalHitEvent event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getEntityPlayer().posX",
+			"y": "event.getEntityPlayer().posY",
+			"z": "event.getEntityPlayer().posZ",
+			"world": "event.getEntityPlayer().world",
+			"entity": "event.getTarget()",
+			"sourceentity": "event.getEntityPlayer()",
+			"damagemodifier": "event.getDamageModifier()",
+			"isvanillacritical": "event.isVanillaCritical()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

@@ -1,9 +1,15 @@
-@SubscribeEvent public void onCropGrowPre(BlockEvent.CropGrowEvent.Pre event){
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("x",event.getPos().getX());
-	dependencies.put("y",event.getPos().getY());
-	dependencies.put("z",event.getPos().getZ());
-	dependencies.put("world",event.getWorld().getWorld());
-	dependencies.put("event",event);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onCropGrowPre(BlockEvent.CropGrowEvent.Pre event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getPos().getX()",
+			"y": "event.getPos().getY()",
+			"z": "event.getPos().getZ()",
+			"blockstate": "event.getState()",
+			"world": "event.getWorld()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

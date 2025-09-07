@@ -1,17 +1,17 @@
-@SubscribeEvent public void onBonemeal(BonemealEvent event){
-	EntityPlayer entity=event.getEntityPlayer();
-	int i=event.getPos().getX();
-	int j=event.getPos().getY();
-	int k=event.getPos().getZ();
-	World world=event.getWorld();
-	ItemStack itemstack=event.getStack();
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("x",i);
-	dependencies.put("y",j);
-	dependencies.put("z",k);
-	dependencies.put("world",world);
-	dependencies.put("itemstack",itemstack);
-	dependencies.put("entity",entity);
-	dependencies.put("event",event);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onBonemeal(BonemealEvent event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getPos().getX()",
+			"y": "event.getPos().getY()",
+			"z": "event.getPos().getZ()",
+			"world": "event.getWorld()",
+			"itemstack": "event.getStack()",
+			"entity": "event.getEntityPlayer()",
+			"blockstate": "event.getBlock()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

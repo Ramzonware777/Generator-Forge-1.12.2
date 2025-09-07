@@ -1,16 +1,16 @@
-@SubscribeEvent public void onItemDestroyed(PlayerDestroyItemEvent event){
-	Entity entity=event.getEntityPlayer();
-	double i=entity.posX;
-	double j=entity.posY;
-	double k=entity.posZ;
-	ItemStack itemstack=event.getOriginal();
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("x",i);
-	dependencies.put("y",j);
-	dependencies.put("z",k);
-	dependencies.put("world",entity.world);
-	dependencies.put("entity",entity);
-	dependencies.put("event",event);
-	dependencies.put("itemstack",itemstack);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onItemDestroyed(PlayerDestroyItemEvent event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getEntityPlayer().posX",
+			"y": "event.getEntityPlayer().posY",
+			"z": "event.getEntityPlayer().posZ",
+			"world": "event.getEntityPlayer().world",
+			"entity": "event.getEntityPlayer()",
+			"itemstack": "event.getOriginal()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

@@ -1,15 +1,15 @@
-@SubscribeEvent public void onEntityJoin(EntityJoinWorldEvent event){
-		World world=event.getWorld();
-		Entity entity=event.getEntity();
-		double i=entity.posX;
-		double j=entity.posY;
-		double k=entity.posZ;
-		Map<String, Object> dependencies = new HashMap<>();
-		dependencies.put("x",i);
-		dependencies.put("y",j);
-		dependencies.put("z",k);
-		dependencies.put("world",world);
-		dependencies.put("entity",entity);
-		dependencies.put("event",event);
-		this.executeProcedure(dependencies);
-		}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onEntityJoin(EntityJoinWorldEvent event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getEntity().posX",
+			"y": "event.getEntity().posY",
+			"z": "event.getEntity().posZ",
+			"world": "event.getWorld()",
+			"entity": "event.getEntity()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

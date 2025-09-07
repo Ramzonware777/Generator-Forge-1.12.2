@@ -11,5 +11,5 @@ map: HashMap
 advancement: Advancement
 dimensiontype: int
 actionresulttype: EnumActionResult
-cmdcontext: ICommandSender
+cmdcontext: HashMap<String,Object>
 damagesource: DamageSource

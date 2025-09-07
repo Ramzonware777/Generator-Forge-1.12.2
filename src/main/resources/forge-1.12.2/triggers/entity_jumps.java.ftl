@@ -1,16 +1,15 @@
-@SubscribeEvent public void onEntityJump(LivingEvent.LivingJumpEvent event){
-	LivingEntity entity=event.getEntityLiving();
-	double i=entity.posX;
-	double j=entity.posY;
-	double k=entity.posZ;
-	World world=entity.world;
-
-	Map<String, Object> dependencies = new HashMap<>();
-	dependencies.put("x",i);
-	dependencies.put("y",j);
-	dependencies.put("z",k);
-	dependencies.put("world",world);
-	dependencies.put("entity",entity);
-	dependencies.put("event",event);
-	this.executeProcedure(dependencies);
-}
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber public class ${name}Procedure {
+	@SubscribeEvent public static void onEntityJump(LivingEvent.LivingJumpEvent event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+			"x": "event.getEntityLiving().posX",
+			"y": "event.getEntityLiving().posY",
+			"z": "event.getEntityLiving().posZ",
+			"world": "event.getEntityLiving().world",
+			"entity": "event.getEntityLiving()",
+			"event": "event"
+			}/>
+		</#compress></#assign>
+		execute(event<#if dependenciesCode?has_content>,</#if>${dependenciesCode});
+	}

@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 		MinecraftForge.EVENT_BUS.register(this);
 
 		<#if w.hasVariables()>${JavaModName}Variables.init();</#if>
+		<#if w.getGElementsOfType('procedure')?filter(e -> e.procedurexml?contains('player_left_click_air') || e.procedurexml?contains('player_right_click_empty_hand'))?size != 0>${JavaModName}Procedures.load();</#if>
 
 		proxy.preInit(event);
 		// Start of user code block mod init
