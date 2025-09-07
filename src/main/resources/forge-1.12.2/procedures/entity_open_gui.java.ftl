@@ -1,2 +1,4 @@
-if(${input$entity} instanceof EntityPlayer)
-    ((EntityPlayer)${input$entity}).openGui(${JavaModName}.instance, Gui${(field$guiname)}.GUIID,world,x,y,z);
+<#-- @formatter:off -->
+if(${input$entity} instanceof EntityPlayerMP)
+	((EntityPlayerMP) ${input$entity}).openGui(${JavaModName}.instance, ${JavaModName}Screens.${field$guiname?upper_case}_ID, world, (int) x, (int) y, (int) z);
+<#-- @formatter:on -->

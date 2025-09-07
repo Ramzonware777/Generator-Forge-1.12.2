@@ -1,8 +1,9 @@
 {
     "parent": "block/${var_model}",
     "textures": {
-      "bottom": "${modid}:blocks/${data.texture}",
-      "top": "${modid}:blocks/${data.texture}",
-      "side": "${modid}:blocks/${data.texture}"
+      <#if data.particleTexture?has_content>"particle": "${data.particleTexture.format("%s:block/%s")}",</#if>
+      "bottom": "${data.texture.format("%s:block/%s")}",
+      "top": "${data.textureTop().format("%s:block/%s")}",
+      "side": "${data.textureFront().format("%s:block/%s")}"
     }
 }

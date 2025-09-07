@@ -21,6 +21,12 @@ import org.apache.logging.log4j.Logger;
 
 		<#if w.hasVariables()>${JavaModName}Variables.init();</#if>
 		<#if w.getGElementsOfType('procedure')?filter(e -> e.procedurexml?contains('player_left_click_air') || e.procedurexml?contains('player_right_click_empty_hand'))?size != 0>${JavaModName}Procedures.load();</#if>
+		<#if w.hasElementsOfType("gamerule")>${JavaModName}GameRules.load();</#if>
+		<#if w.hasElementsOfType("keybind")>${JavaModName}KeyMappings.load();</#if>
+		<#if w.hasElementsOfType("gui")>
+		${JavaModName}Menus.load();
+		${JavaModName}Screens.load(instance);
+		</#if>
 
 		proxy.preInit(event);
 		// Start of user code block mod init
@@ -38,6 +44,7 @@ import org.apache.logging.log4j.Logger;
 	}
 
 	@Mod.EventHandler public void init(FMLInitializationEvent event) {
+		<#if w.hasElementsOfType("keybind")>${JavaModName}KeyMappings.registerKeyBindings();</#if>
 		proxy.init(event);
 	}
 

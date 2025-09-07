@@ -1,75 +1,100 @@
+<#--
+ # MCreator (https://mcreator.net/)
+ # Copyright (C) 2012-2020, Pylo
+ # Copyright (C) 2020-2025, Pylo, opensource contributors
+ #
+ # This program is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # This program is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ #
+ # Additional permission for code generator templates (*.ftl files)
+ #
+ # As a special exception, you may create a larger work that contains part or
+ # all of the MCreator code generator templates (*.ftl files) and distribute
+ # that work under terms of your choice, so long as that work isn't itself a
+ # template for code generation. Alternatively, if you modify or redistribute
+ # the template itself, you may (at your option) remove this special exception,
+ # which will cause the template and the resulting code generator output files
+ # to be licensed under the GNU General Public License without this special
+ # exception.
+-->
+
 <#-- @formatter:off -->
 <#include "procedures.java.ftl">
+package ${package}.network;
 
-package ${package}.keybind;
+import ${package}.${JavaModName};
 
-@Elements${JavaModName}.ModElement.Tag public class KeyBinding${name} extends Elements${JavaModName}.ModElement {
+public class ${name}Message implements IMessage {
+	int type, pressedms;
 
-	private KeyBinding keys;
+	public ${name}Message() {}
 
-	public KeyBinding${name} (Elements${JavaModName} instance) {
-		super(instance, ${data.getModElement().getSortID()});
+	public ${name}Message(int type, int pressedms) {
+		this.type = type;
+		this.pressedms = pressedms;
 	}
 
-	@Override public void preInit(FMLPreInitializationEvent event) {
-		elements.addNetworkMessage(KeyBindingPressedMessageHandler.class, KeyBindingPressedMessage.class, Side.SERVER);
+	@Override public void fromBytes(ByteBuf buffer) {
+		this.type = buffer.readInt();
+		this.pressedms = buffer.readInt();
 	}
 
-	@SideOnly(Side.CLIENT) @Override public void init(FMLInitializationEvent event) {
-		keys = new KeyBinding("key.mcreator.${registryname}", Keyboard.KEY_${generator.map(data.triggerKey, "keybuttons")}, "key.categories.misc");
-		ClientRegistry.registerKeyBinding(keys);
-
-		MinecraftForge.EVENT_BUS.register(this);
+	@Override public void toBytes(ByteBuf buffer) {
+		buffer.writeInt(this.type);
+		buffer.writeInt(this.pressedms);
 	}
 
-	@SubscribeEvent @SideOnly(Side.CLIENT) public void onKeyInput(InputEvent.KeyInputEvent event) {
-		<#if hasProcedure(data.onKeyPressed)>
-			if (Minecraft.getMinecraft().currentScreen == null) {
-				if (org.lwjgl.input.Keyboard.isKeyDown(keys.getKeyCode())) {
-					${JavaModName}.PACKET_HANDLER.sendToServer(new KeyBindingPressedMessage());
-					pressAction(Minecraft.getMinecraft().player);
-				}
-			}
-    	</#if>
-	}
-
-	public static class KeyBindingPressedMessageHandler implements IMessageHandler<KeyBindingPressedMessage, IMessage> {
-
-		@Override public IMessage onMessage(KeyBindingPressedMessage message, MessageContext context) {
-	    	EntityPlayerMP entity = context.getServerHandler().player;
-	    	entity.getServerWorld().addScheduledTask(() -> {
-	    		<#if hasProcedure(data.onKeyPressed)>
-				pressAction(entity);
-				</#if>
-	    	});
-	    	return null;
-		}
-	}
-
-	public static class KeyBindingPressedMessage implements IMessage {
-
-		@Override public void toBytes(io.netty.buffer.ByteBuf buf) {
-		}
-
-		@Override public void fromBytes(io.netty.buffer.ByteBuf buf) {
-		}
-
-	}
-
-	<#if hasProcedure(data.onKeyPressed)>
-	private static void pressAction(EntityPlayer entity) {
+	<#if hasProcedure(data.onKeyPressed) || hasProcedure(data.onKeyReleased)>
+	public static void pressAction(EntityPlayer entity, int type, int pressedms) {
 		World world = entity.world;
-		int x = (int) entity.posX;
-		int y = (int) entity.posY;
-		int z = (int) entity.posZ;
+		double x = entity.posX;
+		double y = entity.posY;
+		double z = entity.posZ;
 
 		// security measure to prevent arbitrary chunk generation
-		if (!world.isBlockLoaded(new BlockPos(x, y, z)))
+		if (!world.isBlockLoaded(entity.getPosition()))
 			return;
 
-		<@procedureOBJToCode data.onKeyPressed/>
+		<#if hasProcedure(data.onKeyPressed)>
+		if(type == 0) {
+			<@procedureOBJToCode data.onKeyPressed/>
+		}
+		</#if>
+
+		<#if hasProcedure(data.onKeyReleased)>
+		if(type == 1) {
+			<@procedureOBJToCode data.onKeyReleased/>
+		}
+		</#if>
 	}
 	</#if>
 
+    public static class ${name}MessageHandler implements IMessageHandler<${name}Message, IMessage> {
+        @Override public IMessage onMessage(${name}Message message, MessageContext context) {
+            if(context.side == Side.SERVER) {
+                context.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
+                        <#if hasProcedure(data.onKeyPressed) || hasProcedure(data.onKeyReleased)>
+                        pressAction(context.getServerHandler().player, message.type, message.pressedms);
+                        </#if>
+                });
+            }
+
+            return null;
+        }
+    }
+
+	public static void registerMessage() {
+		${JavaModName}.addNetworkMessage(${name}MessageHandler.class, ${name}Message.class, Side.SERVER);
+	}
 }
 <#-- @formatter:on -->

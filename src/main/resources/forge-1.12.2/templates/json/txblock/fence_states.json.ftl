@@ -2,7 +2,7 @@
   "multipart": [
     {
       "apply": {
-        "model": "${modid}:${registryname}_post"
+        "model": "${modid}:block/${registryname}_post"
       }
     },
     {
@@ -10,7 +10,7 @@
         "north": "true"
       },
       "apply": {
-        "model": "${modid}:${registryname}",
+        "model": "${modid}:block/${registryname}",
         "uvlock": true
       }
     },
@@ -19,7 +19,7 @@
         "south": "true"
       },
       "apply": {
-        "model": "${modid}:${registryname}",
+        "model": "${modid}:block/${registryname}",
         "y": 180,
         "uvlock": true
       }
@@ -29,7 +29,7 @@
         "west": "true"
       },
       "apply": {
-        "model": "${modid}:${registryname}",
+        "model": "${modid}:block/${registryname}",
         "y": 270,
         "uvlock": true
       }
@@ -39,7 +39,7 @@
         "east": "true"
       },
       "apply": {
-        "model": "${modid}:${registryname}",
+        "model": "${modid}:block/${registryname}",
         "y": 90,
         "uvlock": true
       }

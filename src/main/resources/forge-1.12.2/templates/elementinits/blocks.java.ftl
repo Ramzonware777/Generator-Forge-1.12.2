@@ -1,0 +1,140 @@
+<#--
+ # MCreator (https://mcreator.net/)
+ # Copyright (C) 2012-2020, Pylo
+ # Copyright (C) 2020-2025, Pylo, opensource contributors
+ #
+ # This program is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # This program is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ #
+ # Additional permission for code generator templates (*.ftl files)
+ #
+ # As a special exception, you may create a larger work that contains part or
+ # all of the MCreator code generator templates (*.ftl files) and distribute
+ # that work under terms of your choice, so long as that work isn't itself a
+ # template for code generation. Alternatively, if you modify or redistribute
+ # the template itself, you may (at your option) remove this special exception,
+ # which will cause the template and the resulting code generator output files
+ # to be licensed under the GNU General Public License without this special
+ # exception.
+-->
+
+<#-- @formatter:off -->
+
+/*
+ *    MCreator note: This file will be REGENERATED on each build.
+ */
+
+package ${package}.init;
+<#assign hasTintedBlocks = false>
+<#assign hasTintedBlockItems = false>
+<#list blocks as block>
+	<#if block.getModElement().getTypeString() == "block">
+		<#if block.tintType != "No tint">
+			<#assign hasTintedBlocks = true>
+			<#if block.isItemTinted && block.hasBlockItem>
+				<#assign hasTintedBlockItems = true>
+			</#if>
+		</#if>
+	<#elseif block.getModElement().getTypeString() == "plant">
+		<#if block.tintType != "No tint">
+			<#assign hasTintedBlocks = true>
+			<#if block.isItemTinted && block.hasBlockItem>
+				<#assign hasTintedBlockItems = true>
+			</#if>
+		</#if>
+	</#if>
+</#list>
+<#assign noteBlockInstrument = blocks?filter(block -> block.noteBlockInstrument?? && block.noteBlockInstrument != "harp")>
+<#assign jumpF = blocks?filter(block -> block.jumpFactor?? && block.jumpFactor != 1.0)>
+
+<#if noteBlockInstrument?size != 0 || jumpF?size != 0>@Mod.EventBusSubscriber </#if>public class ${JavaModName}Blocks {
+    private static final List<Block> REGISTRY = new ArrayList<>();
+
+	<#list blocks as block>
+		<#if block.getModElement().getTypeString() == "dimension">
+            public static final ${block.getModElement().getName()}PortalBlock ${block.getModElement().getRegistryNameUpper()}_PORTAL =
+				register("${block.getModElement().getRegistryName()}_portal", ${block.getModElement().getName()}PortalBlock::new);
+		<#else>
+			public static final Block ${block.getModElement().getRegistryNameUpper()} =
+			    register("${block.getModElement().getRegistryName()}", ${block.getModElement().getName()}Block::new);
+		</#if>
+	</#list>
+
+	// Start of user code block custom blocks
+	// End of user code block custom blocks
+
+    private static Block register(String registryname, Supplier<Block> block) {
+		REGISTRY.add(block.get().setRegistryName(new ResourceLocation(${JavaModName}.MODID, registryname)));
+    	return block;
+    }
+
+	@SubscribeEvent public static void registerBlocks(RegistryEvent.Register<Block> event) {
+		event.getRegistry().registerAll(REGISTRY.toArray(new Block[0]));
+	}
+
+	<#if hasTintedBlocks || hasTintedBlockItems>
+	@Mod.EventBusSubscriber({Side.CLIENT}) public static class BlocksClientSideHandler {
+		<#if hasTintedBlocks>
+		@SubscribeEvent public static void blockColorLoad(ColorHandlerEvent.Block event) {
+			<#list blocks as block>
+				<#if block.getModElement().getTypeString() == "block" || block.getModElement().getTypeString() == "plant">
+					<#if block.tintType != "No tint">
+						 ${block.getModElement().getName()}Block.blockColorLoad(event);
+					</#if>
+				</#if>
+			</#list>
+		}
+		</#if>
+
+		<#if hasTintedBlockItems>
+		@SubscribeEvent public static void itemColorLoad(ColorHandlerEvent.Item event) {
+			<#list blocks as block>
+				<#if block.getModElement().getTypeString() == "block" || block.getModElement().getTypeString() == "plant">
+					<#if block.tintType != "No tint" && block.isItemTinted && block.hasBlockItem>
+						 ${block.getModElement().getName()}Block.itemColorLoad(event);
+					</#if>
+				</#if>
+			</#list>
+		}
+		</#if>
+	}
+	</#if>
+
+	<#if noteBlockInstrument?size != 0>
+	@SubscribeEvent public static void onNoteBlockPlay(NoteBlockEvent.Play event) {
+        <#compress>
+        Block below = event.getWorld().getBlockState(event.getPos().down()).getBlock();
+		<#list noteBlockInstrument as block>
+		if (below == ${JavaModName}Blocks.${block.getModElement().getRegistryNameUpper()}.get()) {
+            event.setInstrument(${generator.map(block.noteBlockInstrument, "noteblockinstruments")});
+        }<#sep>else
+		</#list>
+        </#compress>
+    }
+	</#if>
+
+	<#if jumpF?size != 0>
+	@SubscribeEvent public static void onMobJump(LivingEvent.LivingJumpEvent event) {
+        <#compress>
+		LivingEntity entity = event.getEntityLiving();
+        BlockState state = entity.world.getBlockState(entity.getPosition().down());
+        BlockState stateUp = entity.world.getBlockState(entity.getPosition());
+		if<#list jumpF as block>
+        (state<#if block.getModElement().getTypeString() == "plant">Up</#if>.getBlock() instanceof ${block.getModElement().getName()}Block)
+            entity.setMotion(entity.getMotion().mul(1.0D, ${block.jumpFactor}D, 1.0D));<#sep>else if
+        </#list>
+        </#compress>
+    }
+	</#if>
+}
+<#-- @formatter:on -->

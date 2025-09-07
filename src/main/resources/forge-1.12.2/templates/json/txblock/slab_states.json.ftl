@@ -1,6 +1,7 @@
 {
   "variants": {
-    "half=bottom,variant=default": { "model": "${modid}:${registryname}" },
-    "half=top,variant=default": { "model": "${modid}:${registryname}_top" }
+    "type=bottom": { "model": "${modid}:block/${registryname}" },
+    "type=top": { "model": "${modid}:block/${registryname}_top" },
+    "type=double": { "model": "${modid}:block/${registryname}_full" }
   }
 }
