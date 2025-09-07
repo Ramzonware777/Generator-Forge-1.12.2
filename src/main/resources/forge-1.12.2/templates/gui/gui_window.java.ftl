@@ -142,10 +142,10 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 					<#if hasProcedure(component.text)>
 					String hoverText = <@procedureOBJToStringCode component.text/>;
 					if (hoverText != null) {
-						this.renderTooltip(Arrays.stream(hoverText.split("\n")).collect(Collectors.toList()), mouseX, mouseY);
+						this.drawHoveringText(Arrays.stream(hoverText.split("\n")).collect(Collectors.toList()), mouseX, mouseY);
 					}
 					<#else>
-						this.renderTooltip(new TextComponentTranslation("gui.${modid}.${registryname}.${component.getName()}").getFormattedText(), mouseX, mouseY);
+						this.drawHoveringText(new TextComponentTranslation("gui.${modid}.${registryname}.${component.getName()}").getFormattedText(), mouseX, mouseY);
 					</#if>
 					customTooltipShown = true;
 				}
@@ -239,7 +239,10 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 
 		<#list textFields as component>
 			${component.getName()} = new GuiTextField(${component_index}, this.fontRenderer, this.guiLeft + ${component.gx(data.width) + 1}, this.guiTop + ${component.gy(data.height) + 1},
-			${component.width - 2}, ${component.height - 2}, new TextComponentTranslation("gui.${modid}.${registryname}.${component.getName()}").getFormattedText());
+			${component.width - 2}, ${component.height - 2})<#if component.placeholder?has_content> {
+				    @Override ${mcc.getMethod("net.minecraft.client.gui.GuiTextField", "drawTextBox")
+				        .replace("if (flag1)", "if (!flag2) this.fontRenderer.drawStringWithShadow(new TextComponentTranslation(\"gui." + modid + "." + registryname + "." + component.getName() + "\").getFormattedText(), (float)(k1 - 1), (float)i1, -8355712); if (flag1)")}
+			}</#if>;
 			${component.getName()}.setMaxStringLength(8192);
 			${component.getName()}.setGuiResponder(new GuiPageButtonList.GuiResponder() {
 
@@ -254,11 +257,6 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 			@Override public void setEntryValue(int id, float content) {
             }
 			});
-			<#if component.placeholder?has_content>
-			${component.getName()}.setText(new TextComponentTranslation("gui.${modid}.${registryname}.${component.getName()}").getFormattedText());
-			</#if>
-
-			this.labelList.add(this.${component.getName()});
 		</#list>
 
 		<#assign btid = 0>
@@ -288,12 +286,12 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 				this.guiLeft + ${component.gx(data.width)}, this.guiTop + ${component.gy(data.height)},
 				${component.getWidth(w.getWorkspace())}, ${component.getHeight(w.getWorkspace())},
 				0, 0, ${component.getHeight(w.getWorkspace())},
-				new ResourceLocation("${modid}:textures/screens/atlas/${component.getName()}.png"),
-				${component.getWidth(w.getWorkspace())},
-				${component.getHeight(w.getWorkspace()) * 2})
-				<#if hasProcedure(component.onClick)>{
-				    <@buttonOnClick component/>
-                }</#if>;
+				new ResourceLocation("${modid}:textures/screens/atlas/${component.getName()}.png")) {<#if hasProcedure(component.onClick)>
+				    <@buttonOnClick component/></#if>
+
+				    @Override ${mcc.getMethod("net.minecraft.client.gui.GuiButtonImage", "drawButton", "Minecraft", "int", "int", "float")
+				        .replace("drawTexturedModalRect(this.x, this.y, i, j, this.width, this.height)", "drawModalRectWithCustomSizedTexture(this.x, this.y, i, j, this.width, this.height," + component.getWidth(w.getWorkspace()) + ", " + (component.getHeight(w.getWorkspace()) * 2) + ")")}
+                };
 
 			this.addButton(${component.getName()});
 
