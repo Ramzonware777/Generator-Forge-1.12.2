@@ -43,6 +43,7 @@ import org.apache.logging.log4j.Logger;
 	}
 
 	@Mod.EventHandler public void init(FMLInitializationEvent event) {
+		<#if w.hasElementsOfType("loottable")>${JavaModName}Loottables.load();</#if>
 		<#if w.hasElementsOfType("keybind")>${JavaModName}KeyMappings.registerKeyBindings();</#if>
 		proxy.init(event);
 	}

@@ -34,12 +34,12 @@
  */
 package ${package}.init;
 
-@Mod.EventBusSubscriber
 public class ${JavaModName}Loottables {
 
-    @SubscribeEvent public void init(FMLInitializationEvent event) {
+    public static void load() {
         <#list loottables as loottable>
-        LootTableList.register(new ResourceLocation("${loottable.getNamespace()}", "${loottable.getName()}"));
+        ${JavaModName}.LOGGER.info("HI!");
+        LootTableList.register(new ResourceLocation("${loottable.getNamespace()}:${loottable.getName()}"));
         </#list>
     }
 }

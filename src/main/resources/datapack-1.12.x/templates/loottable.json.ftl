@@ -7,6 +7,7 @@
   "pools": [
     <#list data.pools as pool>
         {
+          "name": "pool_${pool_index}",
           <#if pool.minrolls == pool.maxrolls>
           "rolls": ${pool.minrolls},
           <#else>
@@ -30,15 +31,15 @@
               {
                 <#assign item = mappedMCItemToRegistryName(entry.item)>
                 <#if entry.item.isAir() || item == "minecraft:air">
-                "type": "minecraft:empty",
+                "type": "empty",
                 <#else>
-                "type": "minecraft:${entry.type}",
+                "type": "${entry.type}",
                 "name": "${item}",
                 </#if>
                 "weight": ${entry.weight},
                 "functions": [
                   {
-                    "function": "minecraft:set_count",
+                    "function": "set_count",
                     "count": {
                       "min": ${entry.minCount},
                       "max": ${entry.maxCount}
@@ -46,7 +47,7 @@
                   }
                   <#if entry.minEnchantmentLevel != 0 || entry.maxEnchantmentLevel != 0>
                   ,{
-                    "function": "minecraft:enchant_with_levels",
+                    "function": "enchant_with_levels",
                     "treasure": true,
                     "levels": {
                       "min": ${entry.minEnchantmentLevel},

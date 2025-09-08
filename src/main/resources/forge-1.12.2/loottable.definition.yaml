@@ -7,4 +7,4 @@ global_templates:
   - template: elementinits/loottables.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameLoottables.java"
 
-field_exclusions: [silkTouchMode, affectedByFortune, explosionDecay]
+field_exclusions: [Pool.Entry.silkTouchMode, Pool.Entry.affectedByFortune, Pool.Entry.explosionDecay]
