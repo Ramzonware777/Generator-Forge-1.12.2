@@ -1,6 +1,6 @@
 name: Forge for @minecraft (@buildfileversion)
 status: deprecated
-buildfileversion: 14.23.5.2860
+buildfileversion: 14.23.5.2856
 subversion: 1.0 # force setup re-run to update build script for MCREATOR_JVM_OPTIONS
 
 import:
@@ -88,9 +88,7 @@ base_templates:
     writer: file
     name: "@RESROOT/META-INF/accesstransformer.cfg"
     condition_any:
-      - "${w.getGElementsOfType('gamerule')?filter(e -> e.type.equals('Number') || e.type.equals('Logic'))?size != 0}"
-      - "${w.getGElementsOfType('projectile')?filter(e -> (e.modelWidth > 0.5) || (e.modelHeight > 0.5))?size != 0}"
-      - "${w.hasElementsOfType('villagerprofession')}"
+      - "${w.hasElementsOfType('gui')}"
   - template: elementinits/features.java.ftl
     writer: java
     condition_any:

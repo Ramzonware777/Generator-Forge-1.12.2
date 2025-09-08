@@ -324,10 +324,10 @@ public class ${name}Menu extends Container implements ${JavaModName}Menus.MenuAc
 
 	public static void screenInit() {
 		<#if data.hasButtonEvents()>
-			ButtonMessage.registerMessage();
+			${name}ButtonMessage.registerMessage();
 		</#if>
 		<#if data.hasSlotEvents()>
-			SlotMessage.registerMessage();
+			${name}SlotMessage.registerMessage();
 		</#if>
 	}
 }

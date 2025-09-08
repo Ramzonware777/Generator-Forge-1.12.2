@@ -34,17 +34,12 @@
  */
 package ${package}.init;
 
-public class ${JavaModName}GameRules {
+@Mod.EventBusSubscriber public class ${JavaModName}GameRules {
 
-	public static void load() {
+    @SubscribeEvent public static void load(WorldEvent.Load event) {
 	<#list gamerules as gamerule>
-		<#if gamerule.type == "Number">
-				GameRules.addGameRule("${StringUtils.lowercaseFirstLetter(gamerule.getModElement().getName())}",
-				"${gamerule.defaultValueNumber}", GameRules.ValueType.NUMERICAL_VALUE);
-		<#else>
-				GameRules.addGameRule("${StringUtils.lowercaseFirstLetter(gamerule.getModElement().getName())}",
-				"${gamerule.defaultValueLogic}", GameRules.ValueType.BOOLEAN_VALUE);
-		</#if>
+		event.getWorld().getGameRules().addGameRule("${StringUtils.lowercaseFirstLetter(gamerule.getModElement().getName())}",
+		"${gamerule.defaultValueNumber}", GameRules.ValueType.<#if gamerule.type == "Number">NUMERICAL<#else>BOOLEAN</#if>_VALUE);
 	</#list>
     }
 }

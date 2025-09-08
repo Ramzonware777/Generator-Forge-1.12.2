@@ -59,7 +59,7 @@ public class ${name}ButtonMessage implements IMessage {
 		buffer.writeInt(this.z);
 	}
 
-	public static void handleButtonAction(PlayerEntity entity, int buttonID, int x, int y, int z) {
+	public static void handleButtonAction(EntityPlayer entity, int buttonID, int x, int y, int z) {
 		World world = entity.world;
 
 		// security measure to prevent arbitrary chunk generation

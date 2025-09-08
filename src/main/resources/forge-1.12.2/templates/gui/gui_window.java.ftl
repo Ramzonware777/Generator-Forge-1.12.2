@@ -163,13 +163,13 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
 		<#if data.renderBgLayer>
-			Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+			mc.getTextureManager().bindTexture(texture);
 			this.drawModalRectWithCustomSizedTexture(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
 		</#if>
 
 		<#list data.getComponentsOfType("Image") as component>
 			<#if hasProcedure(component.displayCondition)>if (<@procedureOBJToConditionCode component.displayCondition/>) {</#if>
-				Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("${modid}:textures/screens/${component.image}"));
+				mc.getTextureManager().bindTexture(new ResourceLocation("${modid}:textures/screens/${component.image}"));
 					this.drawModalRectWithCustomSizedTexture(this.guiLeft + ${component.gx(data.width)}, this.guiTop + ${component.gy(data.height)}, 0, 0,
 					${component.getWidth(w.getWorkspace())}, ${component.getHeight(w.getWorkspace())},
 					${component.getWidth(w.getWorkspace())}, ${component.getHeight(w.getWorkspace())});
@@ -178,7 +178,7 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 
 		<#list data.getComponentsOfType("Sprite") as component>
 			<#if hasProcedure(component.displayCondition)>if (<@procedureOBJToConditionCode component.displayCondition/>) {</#if>
-				Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("${modid}:textures/screens/${component.sprite}"));
+				mc.getTextureManager().bindTexture(new ResourceLocation("${modid}:textures/screens/${component.sprite}"));
 					this.drawModalRectWithCustomSizedTexture(this.guiLeft + ${component.gx(data.width)}, this.guiTop + ${component.gy(data.height)},
 					<#if (component.getTextureWidth(w.getWorkspace()) > component.getTextureHeight(w.getWorkspace()))>
 						<@getSpriteByIndex component "width"/>, 0
@@ -234,6 +234,7 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 
 	@Override public void initGui() {
 		super.initGui();
+		this.buttonList.clear();
 
 		<#assign tfid = 0>
 
@@ -241,7 +242,7 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 			${component.getName()} = new GuiTextField(${component_index}, this.fontRenderer, this.guiLeft + ${component.gx(data.width) + 1}, this.guiTop + ${component.gy(data.height) + 1},
 			${component.width - 2}, ${component.height - 2})<#if component.placeholder?has_content> {
 				    @Override ${mcc.getMethod("net.minecraft.client.gui.GuiTextField", "drawTextBox")
-				        .replace("if (flag1)", "if (!flag2) this.fontRenderer.drawStringWithShadow(new TextComponentTranslation(\"gui." + modid + "." + registryname + "." + component.getName() + "\").getFormattedText(), (float)(k1 - 1), (float)i1, -8355712); if (flag1)")}
+				        ?replace("if (flag1)", "if (!flag2 && s.isEmpty()) this.fontRenderer.drawStringWithShadow(new TextComponentTranslation(\"gui." + modid + "." + registryname + "." + component.getName() + "\").getFormattedText(), (float)(k1 - 1), (float)i1, -8355712); if (flag1)")}
 			}</#if>;
 			${component.getName()}.setMaxStringLength(8192);
 			${component.getName()}.setGuiResponder(new GuiPageButtonList.GuiResponder() {
@@ -266,14 +267,13 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 				this.guiLeft + ${component.gx(data.width)}, this.guiTop + ${component.gy(data.height)},
 				${component.width}, ${component.height},
 				new TextComponentTranslation("gui.${modid}.${registryname}.${component.getName()}").getFormattedText())
-				    <#if component.isUndecorated || hasProcedure(component.onClick)>{
-				    <@buttonOnClick component/>
+				    <#if component.isUndecorated>{
 
-				    <#if component.isUndecorated>
                     @Override public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTick) {
+                        this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
                         String text = this.isMouseOver() ? (TextFormatting.UNDERLINE + ${component.getName()}.displayString) : ${component.getName()}.displayString;
                         drawString(fontRenderer, text, ${component.getName()}.x, ${component.getName()}.y, 16777215 | MathHelper.ceil(1.0F * 255.0F) << 24);
-                    }</#if>
+                    }
                 }</#if>;
 
 			this.addButton(${component.getName()});
@@ -286,11 +286,9 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 				this.guiLeft + ${component.gx(data.width)}, this.guiTop + ${component.gy(data.height)},
 				${component.getWidth(w.getWorkspace())}, ${component.getHeight(w.getWorkspace())},
 				0, 0, ${component.getHeight(w.getWorkspace())},
-				new ResourceLocation("${modid}:textures/screens/atlas/${component.getName()}.png")) {<#if hasProcedure(component.onClick)>
-				    <@buttonOnClick component/></#if>
-
-				    @Override ${mcc.getMethod("net.minecraft.client.gui.GuiButtonImage", "drawButton", "Minecraft", "int", "int", "float")
-				        .replace("drawTexturedModalRect(this.x, this.y, i, j, this.width, this.height)", "drawModalRectWithCustomSizedTexture(this.x, this.y, i, j, this.width, this.height," + component.getWidth(w.getWorkspace()) + ", " + (component.getHeight(w.getWorkspace()) * 2) + ")")}
+				new ResourceLocation("${modid}:textures/screens/atlas/${component.getName()}.png")) {
+				    @Override ${mcc.getMethod("net.minecraft.client.gui.GuiButtonImage", "drawButton", "Minecraft", "int", "int", "float")?trim
+				        ?replace("drawTexturedModalRect(this.x, this.y, i, j, this.width, this.height", "drawModalRectWithCustomSizedTexture(this.x, this.y, i, j, this.width, this.height, " + component.getWidth(w.getWorkspace()) + ", " + (component.getHeight(w.getWorkspace()) * 2))}
                 };
 
 			this.addButton(${component.getName()});
@@ -341,24 +339,26 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 	}
 	</#if>
 
-}
-</#compress>
+	@Override protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		<#list textFields as component>
+			${component.getName()}.mouseClicked(mouseX, mouseY, mouseButton);
+		</#list>
 
-<#macro buttonOnClick component>
-<#if hasProcedure(component.onClick)>
-public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    <#if data.hasButtonEvents()>
+	@Override protected void actionPerformed(GuiButton button) {
 		int x = ${name}Screen.this.x; <#-- #5582 - x and y provided by buttons are in-GUI, not in-world coordinates -->
 		int y = ${name}Screen.this.y;
-		if (<@procedureOBJToConditionCode component.displayCondition/>) {
-			${JavaModName}.PACKET_HANDLER.sendToServer(new ${name}ButtonMessage(${btid}, x, y, z));
-			${name}ButtonMessage.handleButtonAction(entity, ${btid}, x, y, z);
+		if (<#list buttons as component><@procedureOBJToConditionCode component.displayCondition/><#sep>||</#list> <#if imageButtons?has_content>|| <#list imageButtons as component><@procedureOBJToConditionCode component.displayCondition/><#sep>||</#list></#if>) {
+			${JavaModName}.PACKET_HANDLER.sendToServer(new ${name}ButtonMessage(button.id, x, y, z));
+			${name}ButtonMessage.handleButtonAction(entity, button.id, x, y, z);
 		}
-
-    return super.mousePressed(mc, mouseX, mouseY);
+    }
+    </#if>
 }
-</#if>
-</#macro>
-
+</#compress>
 <#macro getSpriteByIndex component dim>
 	<#if hasProcedure(component.spriteIndex)>
 		MathHelper.clamp((int) <@procedureOBJToNumberCode component.spriteIndex/> *

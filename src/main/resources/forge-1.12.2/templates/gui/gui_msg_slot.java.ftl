@@ -65,7 +65,7 @@ public class ${name}SlotMessage implements IMessage {
 		buffer.writeInt(this.meta);
 	}
 
-	public static void handleSlotAction(PlayerEntity entity, int slot, int changeType, int meta, int x, int y, int z) {
+	public static void handleSlotAction(EntityPlayer entity, int slot, int changeType, int meta, int x, int y, int z) {
 		World world = entity.world;
 
 		// security measure to prevent arbitrary chunk generation
