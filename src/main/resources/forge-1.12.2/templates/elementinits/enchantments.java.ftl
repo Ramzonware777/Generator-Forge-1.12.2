@@ -41,12 +41,12 @@ package ${package}.init;
 
 	<#list enchantments as enchantment>
 	public static final Enchantment ${enchantment.getModElement().getRegistryNameUpper()} =
-		REGISTRY.register("${enchantment.getModElement().getRegistryName()}", ${enchantment.getModElement().getName()}Enchantment::new);
+	    register("${enchantment.getModElement().getRegistryName()}", ${enchantment.getModElement().getName()}Enchantment::new);
 	</#list>
 
 	private static Enchantment register(String registryname, Supplier<Enchantment> enchantment) {
 		REGISTRY.add(enchantment.get().setRegistryName(new ResourceLocation(${JavaModName}.MODID, registryname)));
-    	return enchantment;
+    	return enchantment.get();
     }
 
 	@SubscribeEvent public static void registerEnchantments(RegistryEvent.Register<Enchantment> event) {
