@@ -287,8 +287,8 @@ public class ${name}Screen extends GuiContainer implements ${JavaModName}Screens
 				${component.getWidth(w.getWorkspace())}, ${component.getHeight(w.getWorkspace())},
 				0, 0, ${component.getHeight(w.getWorkspace())},
 				new ResourceLocation("${modid}:textures/screens/atlas/${component.getName()}.png")) {
-				    @Override ${mcc.getMethod("net.minecraft.client.gui.GuiButtonImage", "drawButton", "Minecraft", "int", "int", "float")?trim
-				        ?replace("drawTexturedModalRect(this.x, this.y, i, j, this.width, this.height", "drawModalRectWithCustomSizedTexture(this.x, this.y, i, j, this.width, this.height, " + component.getWidth(w.getWorkspace()) + ", " + (component.getHeight(w.getWorkspace()) * 2))}
+				    @Override ${mcc.getMethod("net.minecraft.client.gui.GuiButtonImage", "drawButton", "Minecraft", "int", "int", "float")
+				        ?replace("drawTexturedModalRect", "drawModalRectWithCustomSizedTexture")?replace("this.height)", "this.height, " + component.getWidth(w.getWorkspace()) + ", " + (component.getHeight(w.getWorkspace()) * 2) + ")")};
                 };
 
 			this.addButton(${component.getName()});
