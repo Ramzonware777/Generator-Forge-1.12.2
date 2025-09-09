@@ -29,17 +29,30 @@
 -->
 
 <#-- @formatter:off -->
+<#include "../mcitems.ftl">
+<#include "../procedures.java.ftl">
 /*
- *    MCreator note: This file will be REGENERATED on each build.
+ *	MCreator note: This file will be REGENERATED on each build.
  */
 package ${package}.init;
 
-public class ${JavaModName}Loottables {
+@Mod.EventBusSubscriber public class ${JavaModName}Fuels {
 
-    public static void load() {
-        <#list loottables as loottable>
-        LootTableList.register(new ResourceLocation("${loottable.getNamespace()}:${loottable.getName()}"));
-        </#list>
-    }
+	@SubscribeEvent
+	public static void furnaceFuelBurnTimeEvent(FurnaceFuelBurnTimeEvent event) {
+		<#compress>
+		ItemStack itemstack = event.getItemStack();
+		<#list itemextensions?filter(e -> e.enableFuel) as extension>
+			if (itemstack.getItem() == ${mappedMCItemToItem(extension.item)}
+			<#if hasProcedure(extension.fuelSuccessCondition)>&& <@procedureOBJToConditionCode extension.fuelSuccessCondition/></#if>)
+				<#if hasProcedure(extension.fuelPower)>
+					event.setBurnTime((int) <@procedureOBJToNumberCode extension.fuelPower/>);
+				<#else>
+					event.setBurnTime(${extension.fuelPower.getFixedValue()});
+				</#if>
+			<#sep>else
+		</#list>
+		</#compress>
+	}
 }
 <#-- @formatter:on -->

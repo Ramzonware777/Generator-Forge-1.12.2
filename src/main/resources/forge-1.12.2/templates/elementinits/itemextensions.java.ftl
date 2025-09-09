@@ -34,11 +34,11 @@
  */
 package ${package}.init;
 
-public class ${JavaModName}Loottables {
+public class ${JavaModName}ItemExtensions {
 
     public static void load() {
-        <#list loottables as loottable>
-        LootTableList.register(new ResourceLocation("${loottable.getNamespace()}:${loottable.getName()}"));
+        <#list itemextensions as itemextension>
+            ${itemextension.getModElement().getName()}ItemExtension.init();
         </#list>
     }
 }
