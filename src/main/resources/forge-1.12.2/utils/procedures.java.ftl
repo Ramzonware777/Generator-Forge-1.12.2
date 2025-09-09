@@ -20,10 +20,10 @@
 
 <#macro procedureCodeWithOptResult object type defaultResult dependencies={} lie=false>
     <#if hasReturnValueOf(object, type)>
-        return <@procedureCode object dependencies !lie/><#if lie> != ActionResultType.FAIL;</#if>
+        return <@procedureCode object dependencies !lie/><#if lie> != EnumActionResult.FAIL;</#if>
     <#else>
         <@procedureCode object dependencies/>
-        return ${defaultResult}<#if lie> != ActionResultType.FAIL</#if>;
+        return ${defaultResult}<#if lie> != EnumActionResult.FAIL</#if>;
     </#if>
 </#macro>
 
@@ -88,7 +88,7 @@
     <#if hasProcedure(object)>
         <@procedureToRetvalCode name=object.getName() dependencies=object.getDependencies(generator.getWorkspace()) />
     <#else>
-        ActionResultType.PASS
+        EnumActionResult.PASS
     </#if>
 </#macro>
 

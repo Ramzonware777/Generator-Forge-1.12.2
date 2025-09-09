@@ -121,7 +121,7 @@ public class ${name}Menu extends Container implements ${JavaModName}Menus.MenuAc
  						private int y = ${name}Menu.this.y;
 
 						<#if hasProcedure(component.disablePickup) || component.disablePickup.getFixedValue()>
-						@Override public boolean canTakeStack(PlayerEntity entity) {
+						@Override public boolean canTakeStack(EntityPlayer entity) {
 							return <@procedureOBJToConditionCode component.disablePickup false true/>;
 						}
 						</#if>
@@ -290,11 +290,11 @@ public class ${name}Menu extends Container implements ${JavaModName}Menus.MenuAc
 			}
 		</#if>
 	<#else>
-		@Override public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+		@Override public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
 			return ItemStack.EMPTY;
 		}
 		<#if hasProcedure(data.onClosed)>
-			@Override public void onContainerClosed(PlayerEntity playerIn) {
+			@Override public void onContainerClosed(EntityPlayer playerIn) {
 				super.onContainerClosed(playerIn);
 				<@procedureOBJToCode data.onClosed/>
 			}
