@@ -29,26 +29,23 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../mcitems.ftl">
-
 /*
  *    MCreator note: This file will be REGENERATED on each build.
  */
-
 package ${package}.init;
+<#include "../mcitems.ftl">
 
-@Mod.EventBusSubscriber public class ${JavaModName}Sounds {
-	public static final Map<ResourceLocation, SoundEvent> REGISTRY = new HashMap<>();
+public class ${JavaModName}Tags {
 
-	static {
-		<#list sounds as sound>
-		REGISTRY.put(new ResourceLocation("${modid}" ,"${sound}"), new SoundEvent(new ResourceLocation("${modid}", "${sound}")));
-		</#list>
-	}
-
-	@SubscribeEvent public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {
-		for (Map.Entry<ResourceLocation, SoundEvent> sound : REGISTRY.entrySet())
-			event.getRegistry().register(sound.getValue().setRegistryName(sound.getKey()));
-	}
+    public static void load() {
+        <#list w.getTagElements()?keys as tag>
+            <#assign elements = w.getTagElements()[tag]>
+            <#if tag.type.name() == "items" || tag.type.name() == "blocks">
+                <#list w.normalizeTagElements(tag.resourcePath, 1, elements) as value>
+                    OreDictionary.registerOre("${tag.getName()}", ${mappedMCItemToItemStackCode(value, 1)});
+                </#list>
+            </#if>
+        </#list>
+    }
 }
 <#-- @formatter:on -->
