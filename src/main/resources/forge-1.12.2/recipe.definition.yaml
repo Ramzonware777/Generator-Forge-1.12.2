@@ -1,10 +1,19 @@
 templates:
-  - template: smelting.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/item/crafting/Recipe@NAME.java"
-    condition: "recipeType %= Smelting"
-    deleteWhenConditionFalse: true
-  - template: json/recipe.json.ftl
+  - template: recipe/smelting.json.ftl # loaded from datapack generator
     writer: json
-    name: "@MODASSETSROOT/recipes/@registryname.json"
+    name: "@MODASSETSROOT/recipes/@[getName()].json"
+    condition: "recipeType %= Smelting"
+  - template: recipe/crafting.json.ftl # loaded from datapack generator
+    writer: json
+    name: "@MODASSETSROOT/recipes/@[getName()].json"
     condition: "recipeType %= Crafting"
-    deleteWhenConditionFalse: true
+  - template: recipe/brewingrecipe.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/recipes/brewing/@NAMEBrewingRecipe.java"
+    condition: "recipeType %= Brewing"
+
+  - template: recipe/unlocking_advancement.json.ftl # loaded from datapack generator
+    writer: json
+    name: "@MODASSETSROOT/advancements/recipes/@registryname.json"
+    condition: "hasAdvancement()"
+
+field_exclusions: [cookingBookCategory, craftingBookCategory, blastFurnaceRecipeMaker, smokerRecipeMaker, stoneCutterRecipeMaker, campfireCookingRecipeMaker, smithingRecipeMaker]
