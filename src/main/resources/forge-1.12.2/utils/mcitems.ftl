@@ -5,6 +5,8 @@
         <#assign outputs = mappedBlock?keep_after("/*@?*/")?keep_before_last(")")>
         <#return mappedBlock?keep_before("/*@?*/") + "?" + mappedBlockToBlockStateCode(outputs?keep_before("/*@:*/"))
             + ":" + mappedBlockToBlockStateCode(outputs?keep_after("/*@:*/")) + ")">
+    <#elseif hasMetadata(mappedBlock)>
+        <#return mappedBlockToBlock(splitMetadata(mappedBlock)[0]) + ".getStateFromMeta(" + splitMetadata(mappedBlock)[1] + ")">
     <#else>
         <#return mappedBlockToBlock(mappedBlock) + ".getDefaultState()">
     </#if>
@@ -19,6 +21,8 @@
             + ":" + mappedBlockToBlock(outputs?keep_after("/*@:*/")) + ")">
     <#elseif mappedBlock?starts_with("CUSTOM:")>
         <#return mappedElementToRegistryEntry(mappedBlock)>
+    <#elseif hasMetadata(mappedBlock)>
+        <#return splitMetadata(mappedBlock)[0] + ".getStateFromMeta(" + splitMetadata(mappedBlock)[1] + ").getBlock()">
     <#else>
         <#return mappedBlock>
     </#if>
@@ -39,8 +43,10 @@
 </#function>
 
 <#function toItemStack item amount>
-    <#if amount == 1>
+    <#if amount == 1 && !hasMetadata(item)>
         <#return "new ItemStack(" + item + ")">
+    <#if hasMetadata(item)>
+        <#return "new ItemStack(" + splitMetadata(item)[0] + "," + (amount == amount?floor)?then(amount + ")","(int)(" + amount + "), " + splitMetadata(item)[1] + ")">
     <#else>
         <#return "new ItemStack(" + item + "," + (amount == amount?floor)?then(amount + ")","(int)(" + amount + "))")>
     </#if>
@@ -54,17 +60,19 @@
         <#return mappedBlock?keep_before("/*@?*/") + "?" + mappedMCItemToItem(outputs?keep_before("/*@:*/"))
             + ":" + mappedMCItemToItem(outputs?keep_after("/*@:*/")) + ")">
     <#elseif mappedBlock?starts_with("CUSTOM:")>
-        <#return mappedElementToRegistryEntry(mappedBlock) + generator.isBlock(mappedBlock)?then(".asItem()", "")>
+        <#return generator.isBlock(mappedBlock)?then("Item.getItemFromBlock(", "") + mappedElementToRegistryEntry(mappedBlock) + generator.isBlock(mappedBlock)?then(")", "")>
+    <#elseif hasMetadata(mappedBlock)>
+        <#return mappedBlock?contains("Blocks.")?then("Item.getItemFromBlock(", "") + splitMetadata(mappedBlock)[0] + mappedBlock?contains("Blocks.")?then(")", "")>
     <#else>
-        <#return mappedBlock + mappedBlock?contains("Blocks.")?then(".asItem()","")>
+        <#return mappedBlock?contains("Blocks.")?then("Item.getItemFromBlock(", "") + mappedBlock + mappedBlock?contains("Blocks.")?then(")", "")>
     </#if>
 </#function>
 
 <#function mappedMCItemToIngredient mappedBlock>
     <#if mappedBlock.getUnmappedValue().startsWith("TAG:")>
-        <#return "Ingredient.fromTag(ItemTags.getCollection().getOrCreate(new ResourceLocation(\"" + mappedBlock.getUnmappedValue().replace("TAG:", "").replace("mod:", modid + ":") + "\")))">
+        <#return "new OreIngredient(new ResourceLocation(\"" + mappedBlock.getUnmappedValue().replace("TAG:", "").replace("mod:", modid + ":") + "\"))">
     <#elseif mappedBlock.getMappedValue(1).startsWith("#")>
-        <#return "Ingredient.fromTag(ItemTags.getCollection().getOrCreate(new ResourceLocation(\"" + mappedBlock.getMappedValue(1).replace("#", "") + "\")))">
+        <#return "new OreIngredient(new ResourceLocation(\"" + mappedBlock.getMappedValue(1).replace("#", "") + "\"))">
     <#else>
         <#return "Ingredient.fromStacks(" + mappedMCItemToItemStackCode(mappedBlock, 1) + ")">
     </#if>
@@ -172,11 +180,11 @@
             <#return "\"item\": \"minecraft:air\"">
         </#if>
     <#elseif mappedBlock.getUnmappedValue().startsWith("TAG:")>
-        <#return "\"tag\": \"" + mappedBlock.getUnmappedValue().replace("TAG:", "").replace("mod:", modid + ":")?lower_case + "\"">
+        <#return "\"type\": \"forge:ore_dict\", \"ore\": \"" + mappedBlock.getUnmappedValue().replace("TAG:", "").replace("mod:", modid + ":")?lower_case + "\"">
     <#else>
         <#assign mapped = mappedBlock.getMappedValue(1) />
         <#if mapped.startsWith("#")>
-            <#return "\"tag\": \"" + mapped.replace("#", "") + "\"">
+            <#return "\"type\": \"forge:ore_dict\", \"ore\": \"" + mapped.replace("#", "") + "\"">
         <#elseif mapped.contains(":")>
             <#return "\"item\": \"" + mapped + "\"">
         <#else>
@@ -215,140 +223,10 @@
     </#if>
 </#function>
 
-<#function mappedMCItemToBlockStateJSON mappedBlock>
-    <#if mappedBlock.getUnmappedValue().startsWith("CUSTOM:")>
-        <#assign mcitemresourcepath = mappedMCItemToRegistryName(mappedBlock)/>
-        <#assign me = w.getWorkspace().getModElementByName(generator.getElementPlainName(mappedBlock.getUnmappedValue()))/>
-        <#if me??>
-            <#assign ge = me.getGeneratableElement() />
-            <#assign properties = []>
+<#function hasMetadata mapped>
+    <#return mapped.toString().contains("#")>
+</#function>
 
-            <#if !ge.isUnknown()> <#-- We might still need to generate a valid blockstate JSON during element conversion -->
-                <#if me.getType().getRegistryName() == "fluid">
-                    <#assign properties += [{"name": "level", "value": 0}] />
-                <#elseif me.getType().getRegistryName() == "plant">
-                    <#if ge.plantType == "growapable">
-                        <#assign properties += [{"name": "age", "value": 0}] />
-                    <#elseif ge.plantType == "double">
-                        <#assign properties += [{"name": "half", "value": "lower"}] />
-                    </#if>
-                <#elseif me.getType().getRegistryName() == "block">
-                    <#if ge.blockBase?has_content && ge.blockBase == "Stairs">
-                        <#assign properties += [
-                        {"name": "facing", "value": "north"},
-                        {"name": "half", "value": "bottom"},
-                        {"name": "shape", "value": "straight"},
-                        {"name": "waterlogged", "value": "false"}
-                        ] />
-                    <#elseif ge.blockBase?has_content && ge.blockBase == "Slab">
-                        <#assign properties += [
-                        {"name": "type", "value": "bottom"},
-                        {"name": "waterlogged", "value": "false"}
-                        ] />
-                    <#elseif ge.blockBase?has_content && ge.blockBase == "Fence">
-                        <#assign properties += [
-                        {"name": "east", "value": "false"},
-                        {"name": "north", "value": "false"},
-                        {"name": "south", "value": "false"},
-                        {"name": "waterlogged", "value": "false"},
-                        {"name": "west", "value": "false"}
-                        ] />
-                    <#elseif ge.blockBase?has_content && ge.blockBase == "Wall">
-                        <#assign properties += [
-                        {"name": "east", "value": "none"},
-                        {"name": "north", "value": "none"},
-                        {"name": "south", "value": "none"},
-                        {"name": "up", "value": "true"},
-                        {"name": "waterlogged", "value": "false"},
-                        {"name": "west", "value": "none"}
-                        ] />
-                    <#elseif ge.blockBase?has_content && ge.blockBase == "Leaves">
-                        <#assign properties += [
-                        {"name": "distance", "value": "7"},
-                        {"name": "persistent", "value": "false"},
-                        {"name": "waterlogged", "value": "false"}
-                        ] />
-                    <#elseif ge.blockBase?has_content && ge.blockBase == "TrapDoor">
-                        <#assign properties += [
-                        {"name": "facing", "value": "north"},
-                        {"name": "half", "value": "bottom"},
-                        {"name": "open", "value": "false"},
-                        {"name": "powered", "value": "false"},
-                        {"name": "waterlogged", "value": "false"}
-                        ] />
-                    <#elseif ge.blockBase?has_content && ge.blockBase == "Pane">
-                        <#assign properties += [
-                        {"name": "east", "value": "false"},
-                        {"name": "north", "value": "false"},
-                        {"name": "south", "value": "false"},
-                        {"name": "waterlogged", "value": "false"},
-                        {"name": "west", "value": "false"}
-                        ] />
-                    <#elseif ge.blockBase?has_content && ge.blockBase == "Door">
-                        <#assign properties += [
-                        {"name": "facing", "value": "north"},
-                        {"name": "half", "value": "lower"},
-                        {"name": "hinge", "value": "left"},
-                        {"name": "open", "value": "false"},
-                        {"name": "powered", "value": "false"}
-                        ] />
-                    <#elseif ge.blockBase?has_content && ge.blockBase == "FenceGate">
-                        <#assign properties += [
-                        {"name": "facing", "value": "north"},
-                        {"name": "in_wall", "value": "false"},
-                        {"name": "open", "value": "false"},
-                        {"name": "powered", "value": "false"}
-                        ] />
-                    <#else>
-                        <#if ge.isWaterloggable>
-                            <#assign properties += [{"name": "waterlogged", "value": "false"}] />
-                        </#if>
-
-                        <#if ge.rotationMode != 0 && ge.rotationMode != 5>
-                            <#assign properties += [{"name": "facing", "value": "north"}] />
-                        <#elseif ge.rotationMode == 5>
-                            <#assign properties += [{"name": "axis", "value": "y"}] />
-                        </#if>
-                    </#if>
-                    <#list ge.customProperties as prop>
-                        <#assign properties += [{"name": prop.property().getName().replace("CUSTOM:", ""), "value": prop.value()}] />
-                    </#list>
-                </#if>
-            </#if>
-
-            <#if properties?has_content>
-                <#assign retval='{ "Name": "' + mcitemresourcepath + '", "Properties" : {'/>
-                <#list properties as property>
-                    <#assign retval = retval + '"' + property.name + '": "' + property.value + '"'/>
-                    <#if property?has_next>
-                        <#assign  retval = retval + ","/>
-                    </#if>
-                </#list>
-                <#return retval + "} }">
-            <#else>
-                <#return '{ "Name": "' + mcitemresourcepath + '" }'>
-            </#if>
-        </#if>
-    <#elseif !mappedBlock.getUnmappedValue().startsWith("TAG:")>
-        <#assign mapped = mappedBlock.getMappedValue(1) />
-        <#if !mapped.startsWith("#")>
-            <#if !mapped.contains(":")>
-                <#assign mapped = "minecraft:" + mapped />
-            </#if>
-            <#assign propertymap = fp.file("utils/defaultstates.json")?eval_json/>
-            <#if propertymap[mapped]?has_content>
-                <#assign retval='{ "Name": "' + mapped + '", "Properties" : {'/>
-                <#list propertymap[mapped] as property>
-                    <#assign retval = retval + '"' + property.name + '": "' + property.value + '"'/>
-                    <#if property?has_next>
-                        <#assign  retval = retval + ","/>
-                    </#if>
-                </#list>
-                <#return retval + "} }">
-            <#else>
-                <#return '{ "Name": "' + mapped + '" }'>
-            </#if>
-        </#if>
-    </#if>
-    <#return '{ "Name": "minecraft:air" }'>
+<#function splitMetadata mapped>
+    <#return mapped?split("#")>
 </#function>
