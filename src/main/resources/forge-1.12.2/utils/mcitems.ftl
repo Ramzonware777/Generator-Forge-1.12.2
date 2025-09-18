@@ -45,8 +45,8 @@
 <#function toItemStack item amount>
     <#if amount == 1 && !hasMetadata(item)>
         <#return "new ItemStack(" + item + ")">
-    <#if hasMetadata(item)>
-        <#return "new ItemStack(" + splitMetadata(item)[0] + "," + (amount == amount?floor)?then(amount + ")","(int)(" + amount + "), " + splitMetadata(item)[1] + ")">
+    <#elseif hasMetadata(item)>
+        <#return "new ItemStack(" + splitMetadata(item)[0] + "," + (amount == amount?floor)?then(amount + ")","(int)(" + amount + "), " + splitMetadata(item)[1] + ")")>
     <#else>
         <#return "new ItemStack(" + item + "," + (amount == amount?floor)?then(amount + ")","(int)(" + amount + "))")>
     </#if>

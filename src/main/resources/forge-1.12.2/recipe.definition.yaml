@@ -1,8 +1,4 @@
 templates:
-  - template: recipe/smelting.json.ftl # loaded from datapack generator
-    writer: json
-    name: "@MODASSETSROOT/recipes/@[getName()].json"
-    condition: "recipeType %= Smelting"
   - template: recipe/crafting.json.ftl # loaded from datapack generator
     writer: json
     name: "@MODASSETSROOT/recipes/@[getName()].json"
@@ -16,4 +12,10 @@ templates:
     name: "@MODASSETSROOT/advancements/recipes/@registryname.json"
     condition: "hasAdvancement()"
 
-field_exclusions: [cookingBookCategory, craftingBookCategory, blastFurnaceRecipeMaker, smokerRecipeMaker, stoneCutterRecipeMaker, campfireCookingRecipeMaker, smithingRecipeMaker]
+global_templates:
+  - template: elementinits/recipes.java.ftl
+    writer: java
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameRecipes.java"
+    condition: "${w.getGElementsOfType('recipe')?filter(e -> e.recipeType == 'Smelting' || e.recipeType == 'Brewing')?size != 0}"
+
+field_exclusions: [cookingBookCategory, craftingBookCategory, blastFurnaceRecipeMaker, smokerRecipeMaker, stoneCutterRecipeMaker, campfireCookingRecipeMaker, smithingRecipeMaker, cookingTime]

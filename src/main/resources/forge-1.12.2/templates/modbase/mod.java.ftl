@@ -43,6 +43,7 @@ import org.apache.logging.log4j.Logger;
 	}
 
 	@Mod.EventHandler public void init(FMLInitializationEvent event) {
+		<#if w.getGElementsOfType('recipe')?filter(e -> e.recipeType == 'Smelting' || e.recipeType == 'Brewing')?size != 0>${JavaModName}Recipes.load();</#if>
 		<#if w.hasElementsOfType("loottable")>${JavaModName}Loottables.load();</#if>
 		<#if w.hasElementsOfType("keybind")>${JavaModName}KeyMappings.registerKeyBindings();</#if>
 		<#if w.getGElementsOfType('itemextension')?filter(e -> e.hasDispenseBehavior)?size != 0>${JavaModName}ItemExtensions.load();</#if>
