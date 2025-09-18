@@ -42,8 +42,8 @@ mod_assets_root: "@RESROOT/assets/@modid"
 # specific resource folders
 sounds_dir: "@MODASSETSROOT/sounds"
 structures_dir: "@MODASSETSROOT/structures"
-block_textures_dir: "@MODASSETSROOT/textures/block"
-item_textures_dir: "@MODASSETSROOT/textures/item"
+block_textures_dir: "@MODASSETSROOT/textures/blocks"
+item_textures_dir: "@MODASSETSROOT/textures/items"
 entity_textures_dir: "@MODASSETSROOT/textures/entities"
 effect_textures_dir: "@MODASSETSROOT/textures/mob_effect"
 particle_textures_dir: "@MODASSETSROOT/textures/particle"
@@ -53,8 +53,8 @@ other_textures_dir: "@MODASSETSROOT/textures"
 
 # vanilla resources
 vanilla_resources_jar: "client-extra.jar"
-vanilla_block_textures_dir: "assets/minecraft/textures/block"
-vanilla_item_textures_dir: "assets/minecraft/textures/item"
+vanilla_block_textures_dir: "assets/minecraft/textures/blocks"
+vanilla_item_textures_dir: "assets/minecraft/textures/items"
 
 base_templates:
   - template: modbase/mod.java.ftl

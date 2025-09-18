@@ -5,7 +5,7 @@
         "display": {
           <#if data.parent == "none" && !data.parent.toString().contains("@")>
               <#if !data.background?has_content || data.background == "Default">
-                  "background": "minecraft:textures/block/stone.png",
+                  "background": "minecraft:textures/blocks/stone.png",
               <#else>
                   "background": "${modid}:textures/screens/${data.background}",
               </#if>
