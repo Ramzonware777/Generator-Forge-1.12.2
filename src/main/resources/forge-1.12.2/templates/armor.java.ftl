@@ -1,172 +1,211 @@
-<#-- @formatter:off -->
-<#include "procedures.java.ftl">
+<#--
+ # MCreator (https://mcreator.net/)
+ # Copyright (C) 2012-2020, Pylo
+ # Copyright (C) 2020-2025, Pylo, opensource contributors
+ #
+ # This program is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # This program is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ #
+ # Additional permission for code generator templates (*.ftl files)
+ #
+ # As a special exception, you may create a larger work that contains part or
+ # all of the MCreator code generator templates (*.ftl files) and distribute
+ # that work under terms of your choice, so long as that work isn't itself a
+ # template for code generation. Alternatively, if you modify or redistribute
+ # the template itself, you may (at your option) remove this special exception,
+ # which will cause the template and the resulting code generator output files
+ # to be licensed under the GNU General Public License without this special
+ # exception.
+-->
 
+<#-- @formatter:off -->
+<#include "mcitems.ftl">
+<#include "procedures.java.ftl">
+<#include "triggers.java.ftl">
 package ${package}.item;
 
-@Elements${JavaModName}.ModElement.Tag public class Item${name} extends Elements${JavaModName}.ModElement{
+public abstract class ${name}Item extends ItemArmor {
 
-	@GameRegistry.ObjectHolder("${modid}:${registryname}helmet")
-	public static final Item helmet = null;
-
-	@GameRegistry.ObjectHolder("${modid}:${registryname}body")
-	public static final Item body = null;
-
-	@GameRegistry.ObjectHolder("${modid}:${registryname}legs")
-	public static final Item legs = null;
-
-	@GameRegistry.ObjectHolder("${modid}:${registryname}boots")
-	public static final Item boots = null;
-
-	public Item${name} (Elements${JavaModName} instance) {
-		super(instance, ${data.getModElement().getSortID()});
+	public ${name}Item(EntityEquipmentSlot type) {
+		super(EnumHelper.addArmorMaterial("${registryname}" ,"${modid}:${data.armorTextureFile}", ${data.maxDamage}, new int[] { ${data.damageValueBoots}, ${data.damageValueLeggings}, ${data.damageValueBody}, ${data.damageValueHelmet} },
+            ${data.enchantability}, <#if data.equipSound?has_content && data.equipSound.getUnmappedValue()?has_content>ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.equipSound}"))<#else>null</#if>, ${data.toughness}f), 0, type);
 	}
 
-	@Override public void initElements() {
-		ItemArmor.ArmorMaterial enuma = EnumHelper.addArmorMaterial("${registryname?upper_case}" ,"${modid}:${data.armorTextureFile}" , ${data.maxDamage},
-						new int[] { ${data.damageValueBoots}, ${data.damageValueLeggings}, ${data.damageValueBody}, ${data.damageValueHelmet} },
-						${data.enchantability}, <#if data.equipSound??>(net.minecraft.util.SoundEvent) net.minecraft.util.SoundEvent.REGISTRY
-							.getObject(new ResourceLocation("${data.equipSound}" ))<#else>null</#if>, ${data.toughness}f);
+	<#if data.enableHelmet>
+	public static class Helmet extends ${name}Item {
 
-		<#if data.enableHelmet>
-        elements.items.add(() ->
-			new ItemArmor(enuma, 0, EntityEquipmentSlot.HEAD) <#if hasProcedure(data.onHelmetTick) || data.helmetModelName != "Default">{
-				<#if data.helmetModelName != "Default">
-				@Override @SideOnly(Side.CLIENT) public ModelBiped getArmorModel(EntityLivingBase living, ItemStack stack, EntityEquipmentSlot slot, ModelBiped defaultModel) {
-					ModelBiped armorModel = new ModelBiped();
-					armorModel.bipedHead = new ${data.helmetModelName}().${data.helmetModelPart};
-					armorModel.isSneak = living.isSneaking();
-					armorModel.isRiding = living.isRiding();
-					armorModel.isChild = living.isChild();
-					return armorModel;
-				}
+		public Helmet() {
+			super(EntityEquipmentSlot.HEAD);
+            setUnlocalizedName("${modid}.${registryname}_helmet");
+			setCreativeTab(<@CreativeTabs data.creativeTabs/>);
+		}
 
-				<#if data.helmetModelTexture != "From armor">
-				@Override public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-					return "${modid}:textures/${data.helmetModelTexture}";
-				}
-				</#if>
+		<#if data.helmetModelName != "Default" && data.getHelmetModel()??>
+		@Override @OnlyIn(Dist.CLIENT) public ModelBiped getArmorModel(EntityLivingBase living, ItemStack stack, EntityEquipmentSlot slot, ModelBiped defaultModel) {
+			ModelBiped armorModel = new ModelBiped();
+			armorModel.bipedHead = new ${data.helmetModelName}().${data.helmetModelPart};
+			armorModel.bipedHeadwear = new ${data.helmetModelName}().${data.helmetModelPart};
+			armorModel.isSneak = living.isSneaking();
+			armorModel.isSitting = defaultModel.isSitting;
+			armorModel.isChild = living.isChild();
+			return armorModel;
+		}
+		</#if>
 
-				</#if>
+		<@addSpecialInformation data.helmetSpecialInformation, "item." + modid + "." + registryname + "_helmet"/>
 
-				<#if hasProcedure(data.onHelmetTick)>
-				@Override public void onArmorTick(World world, EntityPlayer entity, ItemStack itemstack) {
-					super.onArmorTick(world, entity, itemstack);
-					int x = (int) entity.posX;
-					int y = (int) entity.posY;
-					int z = (int) entity.posZ;
-					<@procedureOBJToCode data.onHelmetTick/>
-				}
-				</#if>
-		}</#if>.setUnlocalizedName("${registryname}helmet").setRegistryName("${registryname}helmet")<#if data.enableHelmet>.setCreativeTab(${data.creativeTab})</#if>);
-        </#if>
+		@Override public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+			<#if data.helmetModelTexture?has_content && data.helmetModelTexture != "From armor">
+			return "${modid}:textures/entities/${data.helmetModelTexture}";
+			<#else>
+			return "${modid}:textures/models/armor/${data.armorTextureFile}_layer_1.png";
+			</#if>
+		}
 
-        <#if data.enableBody>
-        elements.items.add(() ->
-			new ItemArmor(enuma, 0, EntityEquipmentSlot.CHEST) <#if hasProcedure(data.onBodyTick) || data.bodyModelName != "Default">{
-				<#if data.bodyModelName != "Default">
-				@Override @SideOnly(Side.CLIENT) public ModelBiped getArmorModel(EntityLivingBase living, ItemStack stack, EntityEquipmentSlot slot, ModelBiped defaultModel) {
-					ModelBiped armorModel = new ModelBiped();
-					armorModel.bipedBody = new ${data.bodyModelName}().${data.bodyModelPart};
-					armorModel.isSneak = living.isSneaking();
-					armorModel.isRiding = living.isRiding();
-					armorModel.isChild = living.isChild();
-					return armorModel;
-				}
+		<@hasGlow data.helmetGlowCondition/>
 
-				<#if data.bodyModelTexture != "From armor">
-				@Override public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-					return "${modid}:textures/${data.bodyModelTexture}";
-				}
-				</#if>
-
-				</#if>
-
-				<#if hasProcedure(data.onBodyTick)>
-				@Override public void onArmorTick(World world, EntityPlayer entity, ItemStack itemstack) {
-					int x = (int) entity.posX;
-					int y = (int) entity.posY;
-					int z = (int) entity.posZ;
-					<@procedureOBJToCode data.onBodyTick/>
-				}
-				</#if>
-		}</#if>.setUnlocalizedName("${registryname}body").setRegistryName("${registryname}body")<#if data.enableBody>.setCreativeTab(${data.creativeTab})</#if>);
-        </#if>
-
-        <#if data.enableLeggings>
-        elements.items.add(() ->
-			new ItemArmor(enuma, 0, EntityEquipmentSlot.LEGS) <#if hasProcedure(data.onLeggingsTick) || data.leggingsModelName != "Default">{
-				<#if data.leggingsModelName != "Default">
-				@Override @SideOnly(Side.CLIENT) public ModelBiped getArmorModel(EntityLivingBase living, ItemStack stack, EntityEquipmentSlot slot, ModelBiped defaultModel) {
-					ModelBiped armorModel = new ModelBiped();
-					armorModel.bipedLeftLeg = new ${data.leggingsModelName}().${data.leggingsModelPartL};
-					armorModel.bipedRightLeg = new ${data.leggingsModelName}().${data.leggingsModelPartR};
-					armorModel.isSneak = living.isSneaking();
-					armorModel.isRiding = living.isRiding();
-					armorModel.isChild = living.isChild();
-					return armorModel;
-				}
-
-				<#if data.leggingsModelTexture != "From armor">
-				@Override public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-					return "${modid}:textures/${data.leggingsModelTexture}";
-				}
-				</#if>
-
-				</#if>
-
-				<#if hasProcedure(data.onLeggingsTick)>
-				@Override public void onArmorTick(World world, EntityPlayer entity, ItemStack itemstack) {
-					int x = (int) entity.posX;
-					int y = (int) entity.posY;
-					int z = (int) entity.posZ;
-					<@procedureOBJToCode data.onLeggingsTick/>
-				}
-				</#if>
-		}</#if>.setUnlocalizedName("${registryname}legs").setRegistryName("${registryname}legs")<#if data.enableLeggings>.setCreativeTab(${data.creativeTab})</#if>);
-        </#if>
-
-        <#if data.enableBoots>
-        elements.items.add(() ->
-			new ItemArmor(enuma, 0, EntityEquipmentSlot.FEET) <#if hasProcedure(data.onBootsTick) || data.bootsModelName != "Default">{
-				<#if data.bootsModelName != "Default">
-				@Override @SideOnly(Side.CLIENT) public ModelBiped getArmorModel(EntityLivingBase living, ItemStack stack, EntityEquipmentSlot slot, ModelBiped defaultModel) {
-					ModelBiped armorModel = new ModelBiped();
-					armorModel.bipedLeftLeg = new ${data.bootsModelName}().${data.bootsModelPartL};
-					armorModel.bipedRightLeg = new ${data.bootsModelName}().${data.bootsModelPartR};
-					armorModel.isSneak = living.isSneaking();
-					armorModel.isRiding = living.isRiding();
-					armorModel.isChild = living.isChild();
-					return armorModel;
-				}
-
-				<#if data.bootsModelTexture != "From armor">
-				@Override public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-					return "${modid}:textures/${data.bootsModelTexture}";
-				}
-				</#if>
-
-				</#if>
-
-				<#if hasProcedure(data.onBootsTick)>
-				@Override public void onArmorTick(World world, EntityPlayer entity, ItemStack itemstack) {
-					int x = (int) entity.posX;
-					int y = (int) entity.posY;
-					int z = (int) entity.posZ;
-					<@procedureOBJToCode data.onBootsTick/>
-				}
-				</#if>
-		}</#if>.setUnlocalizedName("${registryname}boots").setRegistryName("${registryname}boots")<#if data.enableBoots>.setCreativeTab(${data.creativeTab})</#if>);
-        </#if>
+		<@onArmorTick data.onHelmetTick/>
 	}
+	</#if>
 
-	@SideOnly(Side.CLIENT) @Override public void registerModels(ModelRegistryEvent event) {
-		<#if data.enableHelmet>ModelLoader.setCustomModelResourceLocation(helmet, 0, new ModelResourceLocation("${modid}:${registryname}helmet", "inventory"));</#if>
-		<#if data.enableBody>ModelLoader.setCustomModelResourceLocation(body, 0, new ModelResourceLocation("${modid}:${registryname}body", "inventory"));</#if>
-		<#if data.enableLeggings>ModelLoader.setCustomModelResourceLocation(legs, 0, new ModelResourceLocation("${modid}:${registryname}legs", "inventory"));</#if>
-		<#if data.enableBoots>ModelLoader.setCustomModelResourceLocation(boots, 0, new ModelResourceLocation("${modid}:${registryname}boots", "inventory"));</#if>
+	<#if data.enableBody>
+	public static class Chestplate extends ${name}Item {
+
+		public Chestplate() {
+			super(EntityEquipmentSlot.CHEST);
+            setUnlocalizedName("${modid}.${registryname}_chestplate");
+			setCreativeTab(<@CreativeTabs data.creativeTabs/>);
+		}
+
+		<#if data.bodyModelName != "Default" && data.getBodyModel()??>
+		@Override @OnlyIn(Dist.CLIENT) public ModelBiped getArmorModel(EntityLivingBase living, ItemStack stack, EntityEquipmentSlot slot, ModelBiped defaultModel) {
+			ModelBiped armorModel = new ModelBiped();
+			armorModel.bipedBody = new ${data.bodyModelName}().${data.bodyModelPart};
+
+			<#if data.armsModelPartL?has_content>
+			armorModel.bipedLeftArm = new ${data.bodyModelName}().${data.armsModelPartL};
+			</#if>
+			<#if data.armsModelPartR?has_content>
+			armorModel.bipedRightArm = new ${data.bodyModelName}().${data.armsModelPartR};
+			</#if>
+
+			armorModel.isSneak = living.isSneaking();
+			armorModel.isSitting = defaultModel.isSitting;
+			armorModel.isChild = living.isChild();
+			return armorModel;
+		}
+		</#if>
+
+		<@addSpecialInformation data.bodySpecialInformation, "item." + modid + "." + registryname + "_chestplate"/>
+
+		@Override public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+			<#if data.bodyModelTexture?has_content && data.bodyModelTexture != "From armor">
+			return "${modid}:textures/entities/${data.bodyModelTexture}";
+			<#else>
+			return "${modid}:textures/models/armor/${data.armorTextureFile}_layer_1.png";
+			</#if>
+		}
+
+		<@hasGlow data.bodyGlowCondition/>
+
+		<@onArmorTick data.onBodyTick/>
 	}
+	</#if>
 
-	${data.getArmorModelsCode()}
+	<#if data.enableLeggings>
+	public static class Leggings extends ${name}Item {
 
+		public Leggings() {
+			super(EntityEquipmentSlot.LEGS);
+            setUnlocalizedName("${modid}.${registryname}_leggings");
+			setCreativeTab(<@CreativeTabs data.creativeTabs/>);
+		}
+
+		<#if data.leggingsModelName != "Default" && data.getLeggingsModel()??>
+		@Override @OnlyIn(Dist.CLIENT) public ModelBiped getArmorModel(EntityLivingBase living, ItemStack stack, EntityEquipmentSlot slot, ModelBiped defaultModel) {
+			ModelBiped armorModel = new ModelBiped();
+
+			<#if data.leggingsModelPartL?has_content>
+			armorModel.bipedLeftLeg = new ${data.leggingsModelName}().${data.leggingsModelPartL};
+			</#if>
+			<#if data.leggingsModelPartR?has_content>
+			armorModel.bipedRightLeg = new ${data.leggingsModelName}().${data.leggingsModelPartR};
+			</#if>
+
+			armorModel.isSneak = living.isSneaking();
+			armorModel.isSitting = defaultModel.isSitting;
+			armorModel.isChild = living.isChild();
+			return armorModel;
+		}
+		</#if>
+
+		<@addSpecialInformation data.leggingsSpecialInformation, "item." + modid + "." + registryname + "_leggings"/>
+
+		@Override public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+			<#if data.leggingsModelTexture?has_content && data.leggingsModelTexture != "From armor">
+			return "${modid}:textures/entities/${data.leggingsModelTexture}";
+			<#else>
+			return "${modid}:textures/models/armor/${data.armorTextureFile}_layer_2.png";
+			</#if>
+		}
+
+		<@hasGlow data.leggingsGlowCondition/>
+
+		<@onArmorTick data.onLeggingsTick/>
+	}
+	</#if>
+
+	<#if data.enableBoots>
+	public static class Boots extends ${name}Item {
+
+		public Boots() {
+			super(EntityEquipmentSlot.FEET);
+            setUnlocalizedName("${modid}.${registryname}_boots");
+			setCreativeTab(<@CreativeTabs data.creativeTabs/>);
+		}
+
+		<#if data.bootsModelName != "Default" && data.getBootsModel()??>
+		@Override @OnlyIn(Dist.CLIENT) public ModelBiped getArmorModel(EntityLivingBase living, ItemStack stack, EntityEquipmentSlot slot, ModelBiped defaultModel) {
+			ModelBiped armorModel = new ModelBiped();
+
+			<#if data.bootsModelPartL?has_content>
+			armorModel.bipedLeftLeg = new ${data.bootsModelName}().${data.bootsModelPartL};
+			</#if>
+			<#if data.bootsModelPartR?has_content>
+			armorModel.bipedRightLeg = new ${data.bootsModelName}().${data.bootsModelPartR};
+			</#if>
+
+			armorModel.isSneak = living.isSneaking();
+			armorModel.isSitting = defaultModel.isSitting;
+			armorModel.isChild = living.isChild();
+			return armorModel;
+		}
+		</#if>
+
+		<@addSpecialInformation data.bootsSpecialInformation, "item." + modid + "." + registryname + "_boots"/>
+
+		@Override public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+			<#if data.bootsModelTexture?has_content && data.bootsModelTexture != "From armor">
+			return "${modid}:textures/entities/${data.bootsModelTexture}";
+			<#else>
+			return "${modid}:textures/models/armor/${data.armorTextureFile}_layer_1.png";
+			</#if>
+		}
+
+		<@hasGlow data.bootsGlowCondition/>
+
+		<@onArmorTick data.onBootsTick/>
+	}
+	</#if>
 }
 <#-- @formatter:on -->

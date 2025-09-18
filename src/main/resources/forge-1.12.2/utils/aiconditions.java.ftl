@@ -7,7 +7,7 @@
 			<#if includeBractets>{</#if>
                 <#if hasProcedure(conditions[0])>
                 @Override public boolean shouldExecute() {
-                		double x = ${name}Entity.this.posX;
+			        double x = ${name}Entity.this.posX;
 			        double y = ${name}Entity.this.posY;
 			        double z = ${name}Entity.this.posZ;
 			        Entity entity = ${name}Entity.this;

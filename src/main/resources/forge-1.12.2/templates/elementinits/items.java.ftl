@@ -76,10 +76,9 @@ package ${package}.init;
 </#list>
 
 <#assign orderedItems = orderedCustomItems + orderedVanillaItems + orderedNullItems>
-<#if hasItemsWithProperties>
-@Mod.EventBusSubscriber({Side.CLIENT})
-</#if>
-public class ${JavaModName}Items {
+@Mod.EventBusSubscriber(modid = "${modid}"<#if hasItemsWithProperties>
+, value = Side.CLIENT
+</#if>) public class ${JavaModName}Items {
     private static final List<Item> REGISTRY = new ArrayList<>();
 
 	<#list orderedItems as item>
@@ -130,8 +129,9 @@ public class ${JavaModName}Items {
 	</#list>
 
     private static Item register(String registryname, Supplier<Item> item) {
-		REGISTRY.add(item.get().setRegistryName(new ResourceLocation(${JavaModName}.MODID, registryname)));
-    	return item;
+        Item instance = item.get().setRegistryName(new ResourceLocation(${JavaModName}.MODID, registryname));
+        REGISTRY.add(instance);
+    	return instance;
     }
 
 	@SubscribeEvent public static void registerItems(RegistryEvent.Register<Item> event) {
@@ -192,6 +192,51 @@ public class ${JavaModName}Items {
 	}
 	</#compress>
 	</#if>
+
+	@SubscribeEvent public static void registerModels(ModelRegistryEvent event) {
+	<#list orderedItems as item>
+		<#if item.getModElement().getTypeString() == "armor">
+			<#if item.enableHelmet>
+			ModelLoader.setCustomModelResourceLocation(${item.getModElement().getRegistryNameUpper()}_HELMET, 0, new ModelResourceLocation("${modid}:${item.getModElement().getRegistryName()}_helmet", "inventory"));
+			</#if>
+			<#if item.enableBody>
+			ModelLoader.setCustomModelResourceLocation(${item.getModElement().getRegistryNameUpper()}_CHESTPLATE, 0, new ModelResourceLocation("${modid}:${item.getModElement().getRegistryName()}_chestplate", "inventory"));
+			</#if>
+			<#if item.enableLeggings>
+			ModelLoader.setCustomModelResourceLocation(${item.getModElement().getRegistryNameUpper()}_LEGGINGS, 0, new ModelResourceLocation("${modid}:${item.getModElement().getRegistryName()}_leggings", "inventory"));
+			</#if>
+			<#if item.enableBoots>
+			ModelLoader.setCustomModelResourceLocation(${item.getModElement().getRegistryNameUpper()}_BOOTS, 0, new ModelResourceLocation("${modid}:${item.getModElement().getRegistryName()}_boots", "inventory"));
+			</#if>
+		<#elseif item.getModElement().getTypeString() == "livingentity">
+			public static final Item ${item.getModElement().getRegistryNameUpper()}_SPAWN_EGG =
+				register("${item.getModElement().getRegistryName()}_spawn_egg", () -> new SpawnEggItem(${JavaModName}Entities.${item.getModElement().getRegistryNameUpper()}.get(),
+						${item.spawnEggBaseColor.getRGB()}, ${item.spawnEggDotColor.getRGB()}, new Item.Properties().group(<@CreativeTabs item.creativeTabs/>)));
+		<#elseif item.getModElement().getTypeString() == "dimension" && item.hasIgniter()>
+			public static final Item ${item.getModElement().getRegistryNameUpper()} =
+				register("${item.getModElement().getRegistryName()}", ${item.getModElement().getName()}Item::new);
+		<#elseif item.getModElement().getTypeString() == "fluid" && item.generateBucket>
+			public static final Item ${item.getModElement().getRegistryNameUpper()}_BUCKET =
+				register("${item.getModElement().getRegistryName()}_bucket", ${item.getModElement().getName()}Item::new);
+		<#elseif item.getModElement().getTypeString() == "block" || item.getModElement().getTypeString() == "plant">
+		    <#assign customProp = item.hasCustomItemProperties()>
+			<#if item.isDoubleBlock()>
+				<#assign hasDoubleBlocks = true>
+				public static final Item ${item.getModElement().getRegistryNameUpper()} =
+					doubleBlock<#if !customProp>CMT</#if>(${JavaModName}Blocks.${item.getModElement().getRegistryNameUpper()},
+					<#if customProp><@blockItemProperties item/><#else><@CreativeTabs item.creativeTabs/></#if>);
+			<#else>
+				<#assign hasBlocks = true>
+				public static final Item ${item.getModElement().getRegistryNameUpper()} =
+					block<#if !customProp>CMT</#if>(${JavaModName}Blocks.${item.getModElement().getRegistryNameUpper()},
+					<#if customProp><@blockItemProperties item/><#else><@CreativeTabs item.creativeTabs/></#if>);
+			</#if>
+		<#else>
+			public static final Item ${item.getModElement().getRegistryNameUpper()} =
+				register("${item.getModElement().getRegistryName()}", ${item.getModElement().getName()}Item::new);
+		</#if>
+	</#list>
+	}
 }
 <#macro blockItemProperties block>
 new Item.Properties()
