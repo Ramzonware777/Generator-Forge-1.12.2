@@ -66,7 +66,7 @@ public class ${name}Enchantment extends Enchantment {
 		<#elseif supportedItems?size == 1 && supportedItems?first == "TAG:minecraft:enchantable/equippable">EnumEnchantmentType.WEARABLE;
 		<#elseif supportedItems?size == 1 && supportedItems?first == "TAG:minecraft:enchantable/crossbow">EnumEnchantmentType.CROSSBOW;
 		<#elseif supportedItems?size == 1 && supportedItems?first == "TAG:minecraft:enchantable/vanishing">EnumEnchantmentType.ALL;
-		<#else>EnumEnchantmentType.create("${modid}_${registryname}", item -> ${mappedMCItemsToIngredient(supportedItems)}.test(new ItemStack(item)));
+		<#else>EnumHelper.addEnchantmentType("${modid}_${registryname}", item -> ${mappedMCItemsToIngredient(supportedItems)}.test(new ItemStack(item)));
 		</#if>
 
 	public ${name}Enchantment() {
