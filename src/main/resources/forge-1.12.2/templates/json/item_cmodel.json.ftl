@@ -7,19 +7,19 @@
         "gui": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         },
         "fixed": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         },
         "ground": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         }
     }
@@ -31,13 +31,13 @@
     "parent": "${modid}:custom/${data.getItemCustomModelNameFor(var_item)}",
     "textures": {
       <@textures data.getItemModelTextureMap(var_item)/>
-      "particle": "${data.getItemTextureFor(var_item).format("%s:item/%s")}"
+      "particle": "${data.getItemTextureFor(var_item).format("%s:items/%s")}"
     }
     <#else>
     "parent": "${modid}:custom/${data.customModelName.split(":")[0]}",
     "textures": {
       <@textures data.getTextureMap()/>
-      "particle": "${data.texture.format("%s:item/%s")}"
+      "particle": "${data.texture.format("%s:items/%s")}"
     }
     </#if>
     </#macro>
@@ -61,7 +61,7 @@
 <#macro textures textureMap>
     <#if textureMap??>
         <#list textureMap.entrySet() as texture>
-            "${texture.getKey()}": "${texture.getValue().format("%s:block/%s")}",
+            "${texture.getKey()}": "${texture.getValue().format("%s:blocks/%s")}",
         </#list>
     </#if>
 </#macro>

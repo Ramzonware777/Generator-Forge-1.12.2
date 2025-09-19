@@ -2,7 +2,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "${data.textureBucket.format("%s:item/%s")}"
+    "layer0": "${data.textureBucket.format("%s:items/%s")}"
   }
 }
 <#else>

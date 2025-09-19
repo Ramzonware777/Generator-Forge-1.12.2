@@ -7,19 +7,19 @@
         "gui": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         },
         "fixed": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         },
         "ground": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         }
     }
@@ -31,9 +31,9 @@
     "parent": "<#if hasJavaModel>builtin/entity<#else>item/generated</#if>",
     "textures": {
         <#if var_item??>
-            "layer0": "${data.getItemTextureFor(var_item).format("%s:item/%s")}"
+            "layer0": "${data.getItemTextureFor(var_item).format("%s:items/%s")}"
         <#else>
-            "layer0": "${data.texture.format("%s:item/%s")}"
+            "layer0": "${data.texture.format("%s:items/%s")}"
         </#if>
     }
     </#macro>

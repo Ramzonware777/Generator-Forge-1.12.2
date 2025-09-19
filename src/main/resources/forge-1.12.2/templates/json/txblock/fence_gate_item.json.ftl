@@ -3,7 +3,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "${data.itemTexture.format("%s:item/%s")}"
+    "layer0": "${data.itemTexture.format("%s:items/%s")}"
   }
 }
 <#else>

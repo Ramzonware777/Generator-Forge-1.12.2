@@ -1,12 +1,12 @@
 {
   "parent": "block/cube",
   "textures": {
-    "down": "${data.texture.format("%s:block/%s")}",
-    "up": "${data.textureTop().format("%s:block/%s")}",
-    "north": "${data.textureFront().format("%s:block/%s")}",
-    "east": "${data.textureLeft().format("%s:block/%s")}",
-    "south": "${data.textureBack().format("%s:block/%s")}",
-    "west": "${data.textureRight().format("%s:block/%s")}",
-    "particle": "${data.getParticleTexture().format("%s:block/%s")}"
+    "down": "${data.texture.format("%s:blocks/%s")}",
+    "up": "${data.textureTop().format("%s:blocks/%s")}",
+    "north": "${data.textureFront().format("%s:blocks/%s")}",
+    "east": "${data.textureLeft().format("%s:blocks/%s")}",
+    "south": "${data.textureBack().format("%s:blocks/%s")}",
+    "west": "${data.textureRight().format("%s:blocks/%s")}",
+    "particle": "${data.getParticleTexture().format("%s:blocks/%s")}"
   }
 }

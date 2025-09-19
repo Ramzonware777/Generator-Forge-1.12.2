@@ -5,18 +5,18 @@
 <#else>
 	<#assign conditions = ["", ""]>
 </#if>
-this.tasks.addTask(${customBlockIndex+1}, new EntityAIBase() {
+this.tasks.addTask(${cbi+1}, new Goal() {
 	{
-		this.setMutexBits(1);
+		this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
 	}
 
 	public boolean shouldExecute() {
-		if (EntityCustom.this.getAttackTarget() != null && !EntityCustom.this.getMoveHelper().isUpdating()) {
+		if (${name}Entity.this.getAttackTarget() != null && !${name}Entity.this.getMoveHelper().isUpdating()) {
 			<#if hasProcedure(conditions[0])>
-                        double x = EntityCustom.this.posX;
-			double y = EntityCustom.this.posY;
-			double z = EntityCustom.this.posZ;
-			Entity entity = EntityCustom.this;
+            double x = ${name}Entity.this.posX;
+			double y = ${name}Entity.this.posY;
+			double z = ${name}Entity.this.posZ;
+			Entity entity = ${name}Entity.this;
 			World world = ${name}Entity.this.world;
 			</#if>
 			return <#if hasProcedure(conditions[0])><@procedureOBJToConditionCode conditions[0]/><#else>true</#if>;
@@ -27,30 +27,32 @@ this.tasks.addTask(${customBlockIndex+1}, new EntityAIBase() {
 
 	@Override public boolean shouldContinueExecuting() {
 		<#if hasProcedure(conditions[1])>
-		double x = EntityCustom.this.posX;
-		double y = EntityCustom.this.posY;
-		double z = EntityCustom.this.posZ;
-		Entity entity = EntityCustom.this;
+		double x = ${name}Entity.this.posX;
+		double y = ${name}Entity.this.posY;
+		double z = ${name}Entity.this.posZ;
+		Entity entity = ${name}Entity.this;
 		World world = ${name}Entity.this.world;
 		</#if>
 		return <#if hasProcedure(conditions[1])><@procedureOBJToConditionCode conditions[1]/> &&</#if>
-			EntityCustom.this.getMoveHelper().isUpdating() && EntityCustom.this.getAttackTarget() != null && EntityCustom.this.getAttackTarget().isEntityAlive();
+			${name}Entity.this.getMoveHelper().isUpdating() && ${name}Entity.this.getAttackTarget() != null && ${name}Entity.this.getAttackTarget().isAlive();
 	}
 
 	@Override public void startExecuting() {
-		EntityLivingBase livingentity = EntityCustom.this.getAttackTarget();
-		Vec3d vec3d = livingentity.getPositionEyes(1);
-		EntityCustom.this.moveHelper.setMoveTo(vec3d.x, vec3d.y, vec3d.z, ${field$speed});
+		LivingEntity livingentity = ${name}Entity.this.getAttackTarget();
+		Vec3d vec3d = livingentity.getEyePosition(1);
+		${name}Entity.this.moveController.setMoveTo(vec3d.x, vec3d.y, vec3d.z, ${field$speed});
 	}
 
-	@Override public void updateTask() {
-		EntityLivingBase livingentity = EntityCustom.this.getAttackTarget();
-		double d0 = EntityCustom.this.getDistanceSq(livingentity);
-		if (d0 <= (EntityCustom.this.width * 1.5 * EntityCustom.this.height * 1.5 + livingentity.height)) {
-			EntityCustom.this.attackEntityAsMob(livingentity);
-		} else if (d0 < ${field$radius}) {
-			Vec3d vec3d = livingentity.getPositionEyes(1);
-			EntityCustom.this.moveHelper.setMoveTo(vec3d.x, vec3d.y, vec3d.z, ${field$speed});
+	@Override public void tick() {
+		LivingEntity livingentity = ${name}Entity.this.getAttackTarget();
+		if (${name}Entity.this.getBoundingBox().intersects(livingentity.getBoundingBox())) {
+			${name}Entity.this.attackEntityAsMob(livingentity);
+		} else {
+			double d0 = ${name}Entity.this.getDistanceSq(livingentity);
+			if (d0 < ${field$radius}) {
+				Vec3d vec3d = livingentity.getEyePosition(1);
+				${name}Entity.this.moveController.setMoveTo(vec3d.x, vec3d.y, vec3d.z, ${field$speed});
+			}
 		}
 	}
 });

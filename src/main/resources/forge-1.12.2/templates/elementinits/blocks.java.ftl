@@ -57,7 +57,7 @@ package ${package}.init;
 <#assign noteBlockInstrument = blocks?filter(block -> block.noteBlockInstrument?? && block.noteBlockInstrument != "harp")>
 <#assign jumpF = blocks?filter(block -> block.jumpFactor?? && block.jumpFactor != 1.0)>
 
-<#if noteBlockInstrument?size != 0 || jumpF?size != 0>@Mod.EventBusSubscriber </#if>public class ${JavaModName}Blocks {
+@Mod.EventBusSubscriber(modid = "${modid}") public class ${JavaModName}Blocks {
     private static final List<Block> REGISTRY = new ArrayList<>();
 
 	<#list blocks as block>

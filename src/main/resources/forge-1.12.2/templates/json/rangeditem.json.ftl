@@ -7,19 +7,19 @@
         "gui": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         },
         "fixed": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         },
         "ground": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         }
     }
@@ -29,7 +29,7 @@
     <#macro modelDefinition>
     "parent": "item/generated",
     "textures": {
-      "layer0": "${data.texture.format("%s:item/%s")}"
+      "layer0": "${data.texture.format("%s:items/%s")}"
     },
     "display": {
         "thirdperson_righthand": {

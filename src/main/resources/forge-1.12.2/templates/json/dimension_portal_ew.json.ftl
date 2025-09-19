@@ -1,7 +1,7 @@
 {
   "textures": {
-    "particle": "${data.portalTexture.format("%s:block/%s")}",
-    "portal": "${data.portalTexture.format("%s:block/%s")}"
+    "particle": "${data.portalTexture.format("%s:blocks/%s")}",
+    "portal": "${data.portalTexture.format("%s:blocks/%s")}"
   },
   "elements": [
     {

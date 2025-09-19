@@ -1,2 +1,2 @@
 <#include "aiconditions.java.ftl">
-this.targetTasks.addTask(${customBlockIndex+1}, new EntityAIHurtByTarget(this, ${field$callhelp?lower_case})<@conditionCode field$condition/>);
+this.targetTasks.addTask(${cbi+1}, new EntityAIHurtByTarget(this, ${field$callhelp?lower_case})<@conditionCode field$condition/>);

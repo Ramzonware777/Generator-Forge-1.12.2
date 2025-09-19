@@ -38,9 +38,7 @@ package ${package}.init;
 
 <#assign hasLivingEntities = w.hasElementsOfType("livingentity")>
 
-<#if hasLivingEntities>
-@Mod.EventBusSubscriber
-</#if>
+@Mod.EventBusSubscriber(modid = "${modid}")
 public class ${JavaModName}Entities {
 	private static final List<EntityEntry<?>> REGISTRY = new ArrayList<>();
 

@@ -7,19 +7,19 @@
         "gui": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         },
         "fixed": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         },
         "ground": {
             "parent": "item/generated",
             "textures": {
-                "layer0": "${guiTexture.format("%s:item/%s")}"
+                "layer0": "${guiTexture.format("%s:items/%s")}"
             }
         }
     }
@@ -30,7 +30,7 @@
     <#if data.blockingRenderType == 0>
     "parent": "item/handheld",
     "textures": {
-        "layer0": "${data.texture.format("%s:item/%s")}"
+        "layer0": "${data.texture.format("%s:items/%s")}"
     },
     "display": {
         "thirdperson_righthand": {
@@ -52,7 +52,7 @@
     "parent": "${modid}:custom/${data.blockingModelName.split(":")[0]}",
     "textures": {
         <@textures data.getBlockingTextureMap()/>
-        "particle": "${data.texture.format("%s:item/%s")}"
+        "particle": "${data.texture.format("%s:items/%s")}"
     }
     <#elseif data.blockingRenderType == 2>
     "forge_marker": 1,
@@ -61,7 +61,7 @@
     "model": "${modid}:models/item/${data.blockingModelName.split(":")[0]}.obj",
     "textures": {
         <@textures data.getBlockingTextureMap()/>
-        "particle": "${data.texture.format("%s:item/%s")}"
+        "particle": "${data.texture.format("%s:items/%s")}"
     }
     </#if>
     </#macro>
@@ -70,7 +70,7 @@
 <#macro textures textureMap>
     <#if textureMap??>
         <#list textureMap.entrySet() as texture>
-            "${texture.getKey()}": "${texture.getValue().format("%s:block/%s")}",
+            "${texture.getKey()}": "${texture.getValue().format("%s:blocks/%s")}",
         </#list>
     </#if>
 </#macro>
