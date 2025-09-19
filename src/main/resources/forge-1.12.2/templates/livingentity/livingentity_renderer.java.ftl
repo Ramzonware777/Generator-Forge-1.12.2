@@ -87,8 +87,8 @@ package ${package}.client.renderer;
 <#assign model = model + "<" + name + "Entity>">
 
 <#compress>
-@OnlyIn(Dist.CLIENT)
-public class ${name}Renderer extends Renderer<#if humanoid>Biped<#else>Living</#if><${name}Entity, ${model}> {
+@SideOnly(Side.CLIENT)
+public class ${name}Renderer extends Render<#if humanoid>Biped<#else>Living</#if><${name}Entity, ${model}> {
 
 	public ${name}Renderer(RenderManager context) {
 		super(context, new ${model}(${rootPart}), ${data.modelShadowSize}f);

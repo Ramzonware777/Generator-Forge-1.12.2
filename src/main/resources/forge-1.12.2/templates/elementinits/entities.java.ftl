@@ -40,23 +40,23 @@ package ${package}.init;
 
 @Mod.EventBusSubscriber(modid = "${modid}")
 public class ${JavaModName}Entities {
-	private static final List<EntityEntry<?>> REGISTRY = new ArrayList<>();
+	private static final List<EntityEntry> REGISTRY = new ArrayList<>();
 
 	<#list entities as entity>
 		<#if entity.getModElement().getTypeString() == "projectile">
-			public static final EntityEntry<${entity.getModElement().getName()}Entity> ${entity.getModElement().getRegistryNameUpper()} =
+			public static final EntityEntry ${entity.getModElement().getRegistryNameUpper()} =
 				register("${entity.getModElement().getRegistryName()}", EntityEntryBuilder.<${entity.getModElement().getName()}Entity>
 						create(${entity.getModElement().getName()}Entity::new, EntityClassification.MISC).setCustomClientFactory(${entity.getModElement().getName()}Entity::new)
 						.setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).size(${entity.modelWidth}f, ${entity.modelHeight}f));
 		<#elseif entity.getModElement().getTypeString() == "livingentity">
-			public static final EntityEntry<${entity.getModElement().getName()}Entity> ${entity.getModElement().getRegistryNameUpper()} =
+			public static final EntityEntry ${entity.getModElement().getRegistryNameUpper()} =
 				register("${entity.getModElement().getRegistryName()}", EntityEntryBuilder.<${entity.getModElement().getName()}Entity>
 						create(${entity.getModElement().getName()}Entity::new, ${generator.map(entity.mobSpawningType, "mobspawntypes")})
 							.setShouldReceiveVelocityUpdates(true).setTrackingRange(${entity.trackingRange}).setUpdateInterval(3)
 							.setCustomClientFactory(${entity.getModElement().getName()}Entity::new)<#if entity.immuneToFire>.immuneToFire()</#if>.size(${entity.modelWidth}f, ${entity.modelHeight}f)
 						);
 			<#if entity.hasCustomProjectile()>
-			public static final EntityEntry<${entity.getModElement().getName()}EntityProjectile> ${entity.getModElement().getRegistryNameUpper()}_PROJECTILE =
+			public static final EntityEntry ${entity.getModElement().getRegistryNameUpper()}_PROJECTILE =
 				register("projectile_${entity.getModElement().getRegistryName()}", EntityEntryBuilder.<${entity.getModElement().getName()}EntityProjectile>
 					create(${entity.getModElement().getName()}EntityProjectile::new, EntityClassification.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64)
 						.setUpdateInterval(1).setCustomClientFactory(${entity.getModElement().getName()}EntityProjectile::new).size(0.5f, 0.5f));
@@ -67,13 +67,14 @@ public class ${JavaModName}Entities {
 	// Start of user code block custom entities
 	// End of user code block custom entities
 
-	private static <T extends Entity> EntityEntry<T> register(String registryname, EntityEntryBuilder<T> entityTypeBuilder) {
-		REGISTRY.add(entityTypeBuilder.build().setRegistryName(new ResourceLocation(${JavaModName}.MODID, registryname)));
-    	return enchantment;
+	private static <T extends Entity> EntityEntry register(String registryname, EntityEntryBuilder<T> entityTypeBuilder) {
+	    EntityEntry entry = entityTypeBuilder.build().setRegistryName(new ResourceLocation(${JavaModName}.MODID, registryname));
+		REGISTRY.add(entry);
+    	return entry;
     }
 
-	@SubscribeEvent public static void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-		event.getRegistry().registerAll(REGISTRY.toArray(new EntityType[0]));
+	@SubscribeEvent public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
+		event.getRegistry().registerAll(REGISTRY.toArray(new EntityEntry[0]));
 	}
 
 	<#if hasLivingEntities>

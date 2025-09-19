@@ -127,8 +127,8 @@ package ${package}.init;
 	@SubscribeEvent public static void onMobJump(LivingEvent.LivingJumpEvent event) {
         <#compress>
 		LivingEntity entity = event.getEntityLiving();
-        BlockState state = entity.world.getBlockState(entity.getPosition().down());
-        BlockState stateUp = entity.world.getBlockState(entity.getPosition());
+        IBlockState state = entity.world.getBlockState(entity.getPosition().down());
+        IBlockState stateUp = entity.world.getBlockState(entity.getPosition());
 		if<#list jumpF as block>
         (state<#if block.getModElement().getTypeString() == "plant">Up</#if>.getBlock() instanceof ${block.getModElement().getName()}Block)
             entity.setMotion(entity.getMotion().mul(1.0D, ${block.jumpFactor}D, 1.0D));<#sep>else if

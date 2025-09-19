@@ -7,7 +7,7 @@ _mcreator_map_template:
   - "@JavaModNameEntities.@REGISTRYNAME.get()"
   - "@modid:@registryname"
 _bypass_prefix: "#"
-EntityAgeable: AgeableEntity
+EntityAgeable: EntityAgeable
 EntityAmbientCreature: AmbientEntity
 EntityAnimal: AnimalEntity
 EntityAreaEffectCloud:
@@ -428,7 +428,7 @@ EntityPlayer:
   - EntityType.PLAYER
   - player
 EntityPlayerMP:
-  - ServerPlayerEntity
+  - EntityPlayerMP
   - EntityType.PLAYER
   - player
 EntityFishHook:

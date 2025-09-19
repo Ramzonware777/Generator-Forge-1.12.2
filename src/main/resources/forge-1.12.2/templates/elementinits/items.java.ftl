@@ -101,7 +101,7 @@ package ${package}.init;
 			</#if>
 		<#elseif item.getModElement().getTypeString() == "livingentity">
 			public static final Item ${item.getModElement().getRegistryNameUpper()}_SPAWN_EGG =
-				register("${item.getModElement().getRegistryName()}_spawn_egg", () -> new SpawnEggItem(${JavaModName}Entities.${item.getModElement().getRegistryNameUpper()}.get(),
+				register("${item.getModElement().getRegistryName()}_spawn_egg", () -> new ItemMonsterPlacer(${JavaModName}Entities.${item.getModElement().getRegistryNameUpper()}.get(),
 						${item.spawnEggBaseColor.getRGB()}, ${item.spawnEggDotColor.getRGB()}, new Item.Properties().group(<@CreativeTabs item.creativeTabs/>)));
 		<#elseif item.getModElement().getTypeString() == "dimension" && item.hasIgniter()>
 			public static final Item ${item.getModElement().getRegistryNameUpper()} =

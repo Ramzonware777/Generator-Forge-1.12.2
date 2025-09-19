@@ -2,7 +2,7 @@
 this.tasks.addTask(${cbi+1}, new EntityAIAttackMelee(this, ${field$speed}, ${field$longmemory?lower_case}) {
 
 	@Override protected double getAttackReachSqr(EntityLivingBase entity) {
-		return this.attacker.getWidth() * this.attacker.getWidth() + entity.getWidth();
+		return this.attacker.width * this.attacker.width + entity.width;
     }
 
     <@conditionCode field$condition false/>
