@@ -100,9 +100,7 @@ package ${package}.init;
 				register("${item.getModElement().getRegistryName()}_boots", ${item.getModElement().getName()}Item.Boots::new);
 			</#if>
 		<#elseif item.getModElement().getTypeString() == "livingentity">
-			public static final Item ${item.getModElement().getRegistryNameUpper()}_SPAWN_EGG =
-				register("${item.getModElement().getRegistryName()}_spawn_egg", () -> new ItemMonsterPlacer(${JavaModName}Entities.${item.getModElement().getRegistryNameUpper()}.get(),
-						${item.spawnEggBaseColor.getRGB()}, ${item.spawnEggDotColor.getRGB()}, new Item.Properties().group(<@CreativeTabs item.creativeTabs/>)));
+
 		<#elseif item.getModElement().getTypeString() == "dimension" && item.hasIgniter()>
 			public static final Item ${item.getModElement().getRegistryNameUpper()} =
 				register("${item.getModElement().getRegistryName()}", ${item.getModElement().getName()}Item::new);
@@ -209,7 +207,7 @@ package ${package}.init;
 			ModelLoader.setCustomModelResourceLocation(${item.getModElement().getRegistryNameUpper()}_BOOTS, 0, new ModelResourceLocation("${modid}:${item.getModElement().getRegistryName()}_boots", "inventory"));
 			</#if>
 		<#elseif item.getModElement().getTypeString() == "livingentity">
-			ModelLoader.setCustomModelResourceLocation(${item.getModElement().getRegistryNameUpper()}_SPAWN_EGG, 0, new ModelResourceLocation("${modid}:${item.getModElement().getRegistryName()}_spawn_egg", "inventory"));
+
 		<#elseif item.getModElement().getTypeString() == "dimension" && item.hasIgniter()>
 			public static final Item ${item.getModElement().getRegistryNameUpper()} =
 				register("${item.getModElement().getRegistryName()}", ${item.getModElement().getName()}Item::new);

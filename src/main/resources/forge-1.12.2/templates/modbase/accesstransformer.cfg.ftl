@@ -19,5 +19,9 @@ public net.minecraft.client.gui.GuiButtonImage field_191748_q # yTexStart
 public net.minecraft.client.gui.GuiButtonImage field_191749_r # yDiffText
 </#if>
 
+<#if w.hasElementsOfType('livingentity')>
+public-f net.minecraft.entity.Entity func_70045_F()Z # isImmuneToFire
+</#if>
+
 # Start of user code block custom ATs
 # End of user code block custom ATs

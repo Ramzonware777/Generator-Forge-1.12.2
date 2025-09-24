@@ -45,21 +45,22 @@ public class ${JavaModName}Entities {
 	<#list entities as entity>
 		<#if entity.getModElement().getTypeString() == "projectile">
 			public static final EntityEntry ${entity.getModElement().getRegistryNameUpper()} =
-				register("${entity.getModElement().getRegistryName()}", EntityEntryBuilder.<${entity.getModElement().getName()}Entity>
-						create(${entity.getModElement().getName()}Entity::new, EntityClassification.MISC).setCustomClientFactory(${entity.getModElement().getName()}Entity::new)
-						.setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).size(${entity.modelWidth}f, ${entity.modelHeight}f));
+				register("${entity.getModElement().getRegistryName()}", EntityEntryBuilder.
+						create().entity(${entity.getModElement().getName()}Entity.class).factory(${entity.getModElement().getName()}Entity::new)
+						.tracker(64, 1, true).size(${entity.modelWidth}f, ${entity.modelHeight}f));
 		<#elseif entity.getModElement().getTypeString() == "livingentity">
 			public static final EntityEntry ${entity.getModElement().getRegistryNameUpper()} =
-				register("${entity.getModElement().getRegistryName()}", EntityEntryBuilder.<${entity.getModElement().getName()}Entity>
-						create(${entity.getModElement().getName()}Entity::new, ${generator.map(entity.mobSpawningType, "mobspawntypes")})
-							.setShouldReceiveVelocityUpdates(true).setTrackingRange(${entity.trackingRange}).setUpdateInterval(3)
-							.setCustomClientFactory(${entity.getModElement().getName()}Entity::new)<#if entity.immuneToFire>.immuneToFire()</#if>.size(${entity.modelWidth}f, ${entity.modelHeight}f)
+				register("${entity.getModElement().getRegistryName()}", EntityEntryBuilder.
+						create().entity(${entity.getModElement().getName()}Entity.class)
+							.tracker(${entity.trackingRange}, 3, true)
+							.factory(${entity.getModElement().getName()}Entity::new).size(${entity.modelWidth}f, ${entity.modelHeight}f)
+							<#if entity.hasSpawnEgg>.egg(${entity.spawnEggBaseColor.getRGB()}, ${entity.spawnEggDotColor.getRGB()})</#if>
 						);
 			<#if entity.hasCustomProjectile()>
 			public static final EntityEntry ${entity.getModElement().getRegistryNameUpper()}_PROJECTILE =
-				register("projectile_${entity.getModElement().getRegistryName()}", EntityEntryBuilder.<${entity.getModElement().getName()}EntityProjectile>
-					create(${entity.getModElement().getName()}EntityProjectile::new, EntityClassification.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64)
-						.setUpdateInterval(1).setCustomClientFactory(${entity.getModElement().getName()}EntityProjectile::new).size(0.5f, 0.5f));
+				register("projectile_${entity.getModElement().getRegistryName()}", EntityEntryBuilder.
+					create().entity(${entity.getModElement().getName()}EntityProjectile.class).tracker(64, 1, true)
+						.factory(${entity.getModElement().getName()}EntityProjectile::new).size(0.5f, 0.5f));
 			</#if>
 		</#if>
 	</#list>
@@ -78,7 +79,7 @@ public class ${JavaModName}Entities {
 	}
 
 	<#if hasLivingEntities>
-	@SubscribeEvent public static void init(FMLCommonSetupEvent event) {
+	public static void init() {
 		<#list entities as entity>
 			<#if entity.getModElement().getTypeString() == "livingentity">
 				${entity.getModElement().getName()}Entity.init();

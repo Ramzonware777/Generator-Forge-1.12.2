@@ -369,6 +369,12 @@ public class ${name}Entity extends Entity${extendsClass} <#if interfaces?size gt
 	}
     </#if>
 
+	<#if data.immuneToFire>
+	@Override public boolean isImmuneToFire() {
+		return true;
+	}
+	</#if>
+
 	<#if data.immuneToExplosion>
 	@Override public boolean isImmuneToExplosions() {
 		return true;
@@ -817,17 +823,11 @@ public class ${name}Entity extends Entity${extendsClass} <#if interfaces?size gt
                 int j = MathHelper.floor(this.getEntityBoundingBox().minY);
                 int k = MathHelper.floor(this.posZ);
                 BlockPos blockpos = new BlockPos(i, j, k);
-                return this.world.getBlockState(blockpos.down()).getBlock() == this.spawnableBlock && this.world.getLight(blockpos) > 8 && super.getCanSpawnHere();
-			<#elseif data.mobSpawningType == "ambient" || data.mobSpawningType == "misc">
-			return return this.world.getDifficulty() != EnumDifficulty.PEACEFUL && this.isValidLightLevel() && super.getCanSpawnHere();
+                return this.world.getBlockState(blockpos.down()).getBlock() == Blocks.GRASS && this.world.getLight(blockpos) > 8 && super.getCanSpawnHere();
 			<#elseif data.mobSpawningType == "waterCreature" || data.mobSpawningType == "waterAmbient">
-            return this.posY > 45.0D && this.posY < (double) this.world.getSeaLevel() && super.getCanSpawnHere();
+                return this.posY > 45.0D && this.posY < (double) this.world.getSeaLevel() && super.getCanSpawnHere();
 			<#else>
-                int i = MathHelper.floor(this.posX);
-                int j = MathHelper.floor(this.getEntityBoundingBox().minY);
-                int k = MathHelper.floor(this.posZ);
-                BlockPos blockpos = new BlockPos(i, j, k);
-                return this.world.getBlockState(blockpos.down()).getBlock() == this.spawnableBlock && this.world.getLight(blockpos) > 8 && super.getCanSpawnHere();
+                return this.world.getDifficulty() != EnumDifficulty.PEACEFUL && this.isValidLightLevel() && super.getCanSpawnHere();
 			</#if>
     }
     </#if>
@@ -839,15 +839,15 @@ public class ${name}Entity extends Entity${extendsClass} <#if interfaces?size gt
             if (SPAWN_BIOMES.contains(ForgeRegistries.BIOMES.getKey(biome)))
         </#if>
 
-			biome.getSpawnableList(${generator.map(data.mobSpawningType, "mobspawntypes")}).add(new Biome.SpawnListEntry(${JavaModName}Entities.${REGISTRYNAME}, ${data.spawningProbability},
+			biome.getSpawnableList(${generator.map(data.mobSpawningType, "mobspawntypes")}).add(new Biome.SpawnListEntry(${name}Entity.class, ${data.spawningProbability},
 		        ${data.minNumberOfMobsPerGroup}, ${data.maxNumberOfMobsPerGroup}));
 		}
 
             EntitySpawnPlacementRegistry.setPlacementType(${name}Entity.class,
-			<#if data.mobSpawningType == "creature">EntityLiving.PlacementType.ON_GROUND
-			<#elseif data.mobSpawningType == "ambient" || data.mobSpawningType == "misc">EntityLiving.PlacementType.NO_RESTRICTIONS
-			<#elseif data.mobSpawningType == "waterCreature" || data.mobSpawningType == "waterAmbient" || data.mobSpawningType == "undergroundWaterCreature">EntityLiving.PlacementType.IN_WATER
-			<#else>EntityLiving.PlacementType.ON_GROUND
+			<#if data.mobSpawningType == "creature">EntityLiving.SpawnPlacementType.ON_GROUND
+			<#elseif data.mobSpawningType == "ambient" || data.mobSpawningType == "misc">EntityLiving.SpawnPlacementType.NO_RESTRICTIONS
+			<#elseif data.mobSpawningType == "waterCreature" || data.mobSpawningType == "waterAmbient" || data.mobSpawningType == "undergroundWaterCreature">EntityLiving.SpawnPlacementType.IN_WATER
+			<#else>EntityLiving.SpawnPlacementType.ON_GROUND
 			</#if>);
 		</#if>
 
@@ -869,7 +869,7 @@ public class ${name}Entity extends Entity${extendsClass} <#if interfaces?size gt
 			this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(${data.armorBaseValue});
 
 		if (this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE) == null)
-			this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+			this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(${data.attackStrength});
 
 		if (this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE) != null)
@@ -877,19 +877,19 @@ public class ${name}Entity extends Entity${extendsClass} <#if interfaces?size gt
 
 		<#if (data.knockbackResistance > 0)>
 		if (this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE) == null)
-			this.getAttributes().registerAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
+			this.getAttributeMap().registerAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(${data.knockbackResistance}D);
 		</#if>
 
 		<#if (data.attackKnockback > 0)>
 		if (this.getEntityAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK) == null)
-			this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK);
+			this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(${data.attackKnockback}D);
 		</#if>
 
 		<#if data.flyingMob>
 		if (this.getEntityAttribute(SharedMonsterAttributes.FLYING_SPEED) == null)
-			this.getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
+			this.getAttributeMap().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
 		this.getEntityAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(${data.movementSpeed});
 		</#if>
 	}
