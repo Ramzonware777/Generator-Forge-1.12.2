@@ -86,6 +86,7 @@ public class ${name}Entity extends Entity${extendsClass} <#if interfaces?size gt
 
 	public ${name}Entity(World world) {
     	super(world);
+    	this.setSize(${data.modelWidth}f, ${data.modelHeight}f);
 		stepHeight = ${data.stepHeight}f;
 		experienceValue = ${data.xpAmount};
 		setNoAI(${(!data.hasAI)});

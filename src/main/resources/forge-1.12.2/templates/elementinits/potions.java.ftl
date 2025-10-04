@@ -46,15 +46,14 @@ package ${package}.init;
 			</#list>));
 	</#list>
 
-    private static PotionType register(String registryname, Supplier<PotionType> potion) {
-		REGISTRY.add(potion.get().setRegistryName(new ResourceLocation(${JavaModName}.MODID, registryname)));
-    	return potion;
-    }
+	private static PotionType register(String registryname, Supplier<PotionType> potion) {
+		PotionType instance = potion.get().setRegistryName(registryname);
+		REGISTRY.add(instance);
+		return instance;
+	}
 
 	@SubscribeEvent public static void registerPotions(RegistryEvent.Register<PotionType> event) {
 		event.getRegistry().registerAll(REGISTRY.toArray(new PotionType[0]));
 	}
-
 }
-
 <#-- @formatter:on -->

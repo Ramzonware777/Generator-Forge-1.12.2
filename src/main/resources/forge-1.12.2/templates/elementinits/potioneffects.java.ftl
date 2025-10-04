@@ -37,21 +37,22 @@ package ${package}.init;
 
 <#assign mobHurt = potioneffects?filter(effect -> hasProcedure(effect.onMobHurt))>
 <#assign mobRemoved = potioneffects?filter(effect -> hasProcedure(effect.onMobRemoved))>
-<#if mobHurt?size != 0 || mobRemoved?size != 0>@Mod.EventBusSubscriber </#if>public class ${JavaModName}MobEffects {
-	private static final List<PotionEffect> REGISTRY = new ArrayList<>();
+@Mod.EventBusSubscriber public class ${JavaModName}MobEffects {
+	private static final List<Potion> REGISTRY = new ArrayList<>();
 
 	<#list potioneffects as effect>
-	public static final PotionEffect ${effect.getModElement().getRegistryNameUpper()} =
+	public static final Potion ${effect.getModElement().getRegistryNameUpper()} =
 			register("${effect.getModElement().getRegistryName()}", ${effect.getModElement().getName()}MobEffect::new);
 	</#list>
 
-    private static PotionEffect register(String registryname, Supplier<PotionEffect> potionEffect) {
-		REGISTRY.add(potionEffect.get().setRegistryName(new ResourceLocation(${JavaModName}.MODID, registryname)));
-    	return potionEffect;
-    }
+	private static Potion register(String registryname, Supplier<Potion> potion) {
+		Potion instance = potion.get().setRegistryName(registryname);
+		REGISTRY.add(instance);
+		return instance;
+	}
 
-	@SubscribeEvent public static void registerMobEffects(RegistryEvent.Register<PotionEffect> event) {
-		event.getRegistry().registerAll(REGISTRY.toArray(new PotionEffect[0]));
+	@SubscribeEvent public static void registerMobEffects(RegistryEvent.Register<Potion> event) {
+		event.getRegistry().registerAll(REGISTRY.toArray(new Potion[0]));
 	}
 
 	<#if mobHurt?size != 0>

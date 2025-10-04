@@ -1,22 +1,22 @@
 [{
   "modid": "${settings.getModID()}",
-  "name": "${settings.getModName()}",
+  "name": "${JavaConventions.escapeStringForJava(settings.getModName())}",
 <#if settings.getDescription()?has_content>
-  "description": "${settings.getDescription()}",
+  "description": "${JavaConventions.escapeStringForJava(settings.getDescription())}",
 </#if>
-  "version": "${settings.getVersion()}",
+  "version": "${settings.getCleanVersion()}",
   "mcversion": "1.12.2",
 <#if settings.getWebsiteURL()?has_content>
-  "url": "${settings.getWebsiteURL()}",
+  "url": "${JavaConventions.escapeStringForJava(settings.getWebsiteURL())}",
 </#if>
 <#if settings.getUpdateURL()?has_content>
-  "updateJSON": "${settings.getUpdateURL()}",
+  "updateJSON": "${JavaConventions.escapeStringForJava(settings.getUpdateURL())}",
 </#if>
 <#if settings.getAuthor()?has_content>
-  "authorList": ["${settings.getAuthor()}"],
+  "authorList": ["${JavaConventions.escapeStringForJava(settings.getAuthor())}"],
 </#if>
 <#if settings.getCredits()?has_content>
-  "credits": "${settings.getCredits()}",
+  "credits": "${JavaConventions.escapeStringForJava(settings.getCredits())}",
 </#if>
 <#if settings.getModPicture()?has_content>
   "logoFile": "/logo.png",

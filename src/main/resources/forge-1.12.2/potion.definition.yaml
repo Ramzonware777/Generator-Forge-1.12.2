@@ -1,18 +1,13 @@
-templates:
-  - template: potion.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/potion/Potion@NAME.java"
+global_templates:
+  - template: elementinits/potions.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNamePotions.java"
 
 localizationkeys:
-  - key: effect.@registryname
-    mapto: effectName
   - key: potion.effect.@registryname
-    mapto: name
+    mapto: potionName
   - key: splash_potion.effect.@registryname
-    mapto: name
-    prefix: "Splash "
-  - key: tipped_arrow.effect.@registryname
-    mapto: name
-    prefix: "Arrow of "
+    mapto: splashName
   - key: lingering_potion.effect.@registryname
-    mapto: name
-    prefix: "Lingering "
+    mapto: lingeringName
+  - key: tipped_arrow.effect.@registryname
+    mapto: arrowName

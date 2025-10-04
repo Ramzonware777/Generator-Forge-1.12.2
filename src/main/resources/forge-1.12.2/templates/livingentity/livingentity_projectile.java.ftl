@@ -36,14 +36,17 @@ public class ${name}EntityProjectile extends EntityArrow {
 
 	public ${name}EntityProjectile(World world) {
 		super(world);
+		this.setSize(0.5f, 0.5f);
 	}
 
 	public ${name}EntityProjectile(double x, double y, double z, World world) {
 		super(world, x, y, z);
+		this.setSize(0.5f, 0.5f);
 	}
 
 	public ${name}EntityProjectile(EntityLivingBase entity, World world) {
 		super(world, entity);
+		this.setSize(0.5f, 0.5f);
 	}
 
 	@Override protected void arrowHit(EntityLivingBase livingEntity) {

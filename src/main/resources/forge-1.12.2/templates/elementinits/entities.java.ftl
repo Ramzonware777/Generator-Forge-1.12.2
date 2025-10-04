@@ -47,20 +47,20 @@ public class ${JavaModName}Entities {
 			public static final EntityEntry ${entity.getModElement().getRegistryNameUpper()} =
 				register("${entity.getModElement().getRegistryName()}", EntityEntryBuilder.
 						create().entity(${entity.getModElement().getName()}Entity.class).factory(${entity.getModElement().getName()}Entity::new)
-						.tracker(64, 1, true).size(${entity.modelWidth}f, ${entity.modelHeight}f));
+						.tracker(64, 1, true));
 		<#elseif entity.getModElement().getTypeString() == "livingentity">
 			public static final EntityEntry ${entity.getModElement().getRegistryNameUpper()} =
 				register("${entity.getModElement().getRegistryName()}", EntityEntryBuilder.
 						create().entity(${entity.getModElement().getName()}Entity.class)
 							.tracker(${entity.trackingRange}, 3, true)
-							.factory(${entity.getModElement().getName()}Entity::new).size(${entity.modelWidth}f, ${entity.modelHeight}f)
+							.factory(${entity.getModElement().getName()}Entity::new)
 							<#if entity.hasSpawnEgg>.egg(${entity.spawnEggBaseColor.getRGB()}, ${entity.spawnEggDotColor.getRGB()})</#if>
 						);
 			<#if entity.hasCustomProjectile()>
 			public static final EntityEntry ${entity.getModElement().getRegistryNameUpper()}_PROJECTILE =
 				register("projectile_${entity.getModElement().getRegistryName()}", EntityEntryBuilder.
 					create().entity(${entity.getModElement().getName()}EntityProjectile.class).tracker(64, 1, true)
-						.factory(${entity.getModElement().getName()}EntityProjectile::new).size(0.5f, 0.5f));
+						.factory(${entity.getModElement().getName()}EntityProjectile::new));
 			</#if>
 		</#if>
 	</#list>

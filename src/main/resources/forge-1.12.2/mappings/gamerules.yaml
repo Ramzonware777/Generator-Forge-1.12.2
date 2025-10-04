@@ -1,6 +1,5 @@
 _default: null
-_mcreator_prefix: "CUSTOM:"
-_mcreator_map_template: "@NAMEGameRule"
+_mcreator_map_template: "@JavaModNameGameRules.@REGISTRYNAME"
 ANNOUNCE_ADVANCEMENTS: announceAdvancements
 COMMAND_BLOCK_OUTPUT: commandBlockOutput
 DISABLE_ELYTRA_MOVEMENT_CHECK: disableElytraMovementCheck
