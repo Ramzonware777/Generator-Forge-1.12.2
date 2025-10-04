@@ -36,24 +36,24 @@
 package ${package}.init;
 
 @Mod.EventBusSubscriber public class ${JavaModName}VillagerProfessions {
-    private static final List<VillagerProfession> REGISTRY = new ArrayList<>();
+    private static final List<VillagerRegistry.VillagerProfession> REGISTRY = new ArrayList<>();
 
 	<#list villagerprofessions as villagerprofession>
-		public static final VillagerRegistry.VillagerProfession ${villagerprofession.getModElement().getRegistryNameUpper()} = register("${villagerprofession.getModElement().getRegistryName()}", () -> new VillagerProfession(
+		public static final VillagerRegistry.VillagerProfession ${villagerprofession.getModElement().getRegistryNameUpper()} = register("${villagerprofession.getModElement().getRegistryName()}", () -> new VillagerRegistry.VillagerProfession(
 		    "${villagerprofession.getModElement().getRegistryName()}",
 		    "${modid}:textures/entities/${villagerprofession.professionTextureFile}",
 		    "${modid}:textures/entities/${villagerprofession.zombifiedProfessionTextureFile}"));
 		public static final VillagerRegistry.VillagerCareer ${villagerprofession.getModElement().getRegistryNameUpper()}_CAREER = new VillagerRegistry.VillagerCareer(${villagerprofession.getModElement().getRegistryNameUpper()}, "${villagerprofession.getModElement().getRegistryName()}");
 	</#list>
 
-	private static VillagerProfession register(String registryname, Supplier<VillagerProfession> profession) {
-		VillagerProfession instance = profession.get().setRegistryName(registryname);
+	private static VillagerRegistry.VillagerProfession register(String registryname, Supplier<VillagerRegistry.VillagerProfession> profession) {
+		VillagerRegistry.VillagerProfession instance = profession.get().setRegistryName(registryname);
 		REGISTRY.add(instance);
 		return instance;
 	}
 
-	@SubscribeEvent public static void registerVillagerProfessions(RegistryEvent.Register<VillagerProfession> event) {
-		event.getRegistry().registerAll(REGISTRY.toArray(new VillagerProfession[0]));
+	@SubscribeEvent public static void registerVillagerProfessions(RegistryEvent.Register<VillagerRegistry.VillagerProfession> event) {
+		event.getRegistry().registerAll(REGISTRY.toArray(new VillagerRegistry.VillagerProfession[0]));
 	}
 }
 <#-- @formatter:on -->
