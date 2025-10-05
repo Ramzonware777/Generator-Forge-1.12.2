@@ -1,5 +1,5 @@
 _default: Enchantments.EFFICIENCY
-_mcreator_map_template: "@JavaModNameEnchantments.@REGISTRYNAME.get()"
+_mcreator_map_template: "@JavaModNameEnchantments.@REGISTRYNAME"
 PROTECTION: Enchantments.PROTECTION
 FIRE_PROTECTION: Enchantments.FIRE_PROTECTION
 FEATHER_FALLING: Enchantments.FEATHER_FALLING
@@ -28,12 +28,5 @@ FLAME: Enchantments.FLAME
 INFINITY: Enchantments.INFINITY
 LUCK_OF_THE_SEA: Enchantments.LUCK_OF_THE_SEA
 LURE: Enchantments.LURE
-LOYALTY: Enchantments.LOYALTY
-IMPALING: Enchantments.IMPALING
-RIPTIDE: Enchantments.RIPTIDE
-CHANNELING: Enchantments.CHANNELING
-MULTISHOT: Enchantments.MULTISHOT
-QUICK_CHARGE: Enchantments.QUICK_CHARGE
-PIERCING: Enchantments.PIERCING
 MENDING: Enchantments.MENDING
 VANISHING_CURSE: Enchantments.VANISHING_CURSE
