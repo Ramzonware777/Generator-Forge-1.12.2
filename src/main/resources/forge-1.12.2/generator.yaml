@@ -90,6 +90,7 @@ base_templates:
     condition_any:
       - "${w.hasElementsOfType('gui')}"
       - "${w.hasElementsOfType('livingentity')}"
+      - "${w.hasElementsOfType('projectile')}"
   - template: elementinits/features.java.ftl
     writer: java
     condition_any:

@@ -23,5 +23,9 @@ public net.minecraft.client.gui.GuiButtonImage field_191749_r # yDiffText
 public-f net.minecraft.entity.Entity func_70045_F()Z # isImmuneToFire
 </#if>
 
+<#if w.hasElementsOfType('projectile')>
+public net.minecraft.entity.projectile.EntityArrow field_184552_b # ARROW_TARGETS
+</#if>
+
 # Start of user code block custom ATs
 # End of user code block custom ATs

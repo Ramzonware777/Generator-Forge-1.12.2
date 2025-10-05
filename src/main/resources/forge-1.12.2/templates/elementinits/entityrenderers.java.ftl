@@ -29,11 +29,10 @@
 -->
 
 <#-- @formatter:off -->
-
+<#include "../mcitems.ftl">
 /*
  *    MCreator note: This file will be REGENERATED on each build.
  */
-
 package ${package}.init;
 
 @Mod.EventBusSubscriber({Side.CLIENT}) public class ${JavaModName}EntityRenderers {
@@ -51,13 +50,13 @@ package ${package}.init;
 		<#if entity.getModElement().getTypeString() == "livingentity">
 			RenderingRegistry.registerEntityRenderingHandler(${entity.getModElement()}Entity.class, ${entity.getModElement().getName()}Renderer::new);
 			<#if entity.hasCustomProjectile()>
-			RenderingRegistry.registerEntityRenderingHandler(${entity.getModElement()}EntityProjectile.class, renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));
+			RenderingRegistry.registerEntityRenderingHandler(${entity.getModElement()}EntityProjectile.class, renderManager -> new RenderSnowball(renderManager, ${mappedMCItemToItem(entity.rangedAttackItem, 1)}, Minecraft.getMinecraft().getRenderItem()));
 			</#if>
 		<#elseif entity.getModElement().getTypeString() == "projectile">
 			<#if entity.isCustomModel()>
 			RenderingRegistry.registerEntityRenderingHandler(${entity.getModElement()}Entity.class, ${entity.getModElement().getName()}Renderer::new);
 			<#else>
-			RenderingRegistry.registerEntityRenderingHandler(${entity.getModElement()}Entity.class, renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));
+			RenderingRegistry.registerEntityRenderingHandler(${entity.getModElement()}Entity.class, renderManager -> new RenderSnowball(renderManager, ${entity.getModElement().getName()}Entity.PROJECTILE_ITEM.getItem(), Minecraft.getMinecraft().getRenderItem()));
 			</#if>
 		</#if>
 	</#list>
