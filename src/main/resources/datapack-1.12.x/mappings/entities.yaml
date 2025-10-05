@@ -1,437 +1,371 @@
 _default:
-  - ZombieEntity
-  - EntityType.ZOMBIE
+  - EntityZombie
+  - 54
   - zombie
 _mcreator_map_template:
   - "@NAMEEntity"
-  - "@JavaModNameEntities.@REGISTRYNAME.get()"
+  - "@JavaModNameEntities.@REGISTRYNAME.getEntityId()"
   - "@modid:@registryname"
 _bypass_prefix: "#"
 EntityAgeable: EntityAgeable
-EntityAmbientCreature: AmbientEntity
-EntityAnimal: AnimalEntity
+EntityAmbientCreature: EntityAmbientCreature
+EntityAnimal: EntityAnimal
 EntityAreaEffectCloud:
-  - AreaEffectCloudEntity
-  - EntityType.AREA_EFFECT_CLOUD
+  - EntityAreaEffectCloud
+  - 3
   - area_effect_cloud
 EntityArmorStand:
-  - ArmorStandEntity
-  - EntityType.ARMOR_STAND
+  - EntityArmorStand
+  - 30
   - armor_stand
 EntityArrow:
-  - ArrowEntity
-  - EntityType.ARROW
+  - EntityTippedArrow
+  - 10
   - arrow
 EntityBat:
-  - BatEntity
-  - EntityType.BAT
+  - EntityBat
+  - 65
   - bat
 EntityBlaze:
-  - BlazeEntity
-  - EntityType.BLAZE
+  - EntityBlaze
+  - 61
   - blaze
 EntityBoat:
-  - BoatEntity
-  - EntityType.BOAT
+  - EntityBoat
+  - 41
   - boat
-EntityCat:
-  - CatEntity
-  - EntityType.CAT
-  - cat
 EntityCaveSpider:
-  - CaveSpiderEntity
-  - EntityType.CAVE_SPIDER
+  - EntityCaveSpider
+  - 59
   - cave_spider
 EntityChicken:
-  - ChickenEntity
-  - EntityType.CHICKEN
+  - EntityChicken
+  - 93
   - chicken
-EntityCod:
-  - CodEntity
-  - EntityType.COD
-  - cod
 EntityCow:
-  - CowEntity
-  - EntityType.COW
+  - EntityCow
+  - 92
   - cow
-EntityCreature: CreatureEntity
+EntityCreature: EntityCreature
 EntityCreeper:
-  - CreeperEntity
-  - EntityType.CREEPER
+  - EntityCreeper
+  - 50
   - creeper
 EntityDonkey:
-  - DonkeyEntity
-  - EntityType.DONKEY
+  - EntityDonkey
+  - 31
   - donkey
-EntityDolphin:
-  - DolphinEntity
-  - EntityType.DOLPHIN
-  - dolphin
 EntityDragonFireball:
-  - DragonFireballEntity
-  - EntityType.DRAGON_FIREBALL
+  - EntityDragonFireball
+  - 26
   - dragon_fireball
-EntityDrowned:
-  - DrownedEntity
-  - EntityType.DROWNED
-  - drowned
 EntityElderGuardian:
-  - ElderGuardianEntity
-  - EntityType.ELDER_GUARDIAN
+  - EntityElderGuardian
+  - 4
   - elder_guardian
 EntityEnderCrystal:
-  - EnderCrystalEntity
-  - EntityType.END_CRYSTAL
-  - end_crystal
+  - EntityEnderCrystal
+  - 200
+  - ender_crystal
 EntityDragon:
-  - EnderDragonEntity
-  - EntityType.ENDER_DRAGON
+  - EntityDragon
+  - 63
   - ender_dragon
 EntityEnderman:
-  - EndermanEntity
-  - EntityType.ENDERMAN
+  - EntityEnderman
+  - 58
   - enderman
 EntityEndermite:
-  - EndermiteEntity
-  - EntityType.ENDERMITE
+  - EntityEndermite
+  - 67
   - endermite
 EntityEvokerFangs:
-  - EvokerFangsEntity
-  - EntityType.EVOKER_FANGS
-  - evoker_fangs
+  - EntityEvokerFangs
+  - 33
+  - evocation_fangs
 EntityEvoker:
-  - EvokerEntity
-  - EntityType.EVOKER
-  - evoker
+  - EntityEvoker
+  - 34
+  - evocation_illager
 EntityXPOrb:
-  - ExperienceOrbEntity
-  - EntityType.EXPERIENCE_ORB
-  - experience_orb
+  - EntityXPOrb
+  - 2
+  - xp_orb
 EntityEnderEye:
-  - EyeOfEnderEntity
-  - EntityType.EYE_OF_ENDER
-  - eye_of_ender
+  - EntityEnderEye
+  - 15
+  - eye_of_ender_signal
 EntityFallingBlock:
-  - FallingBlockEntity
-  - EntityType.FALLING_BLOCK
+  - EntityFallingBlock
+  - 21
   - falling_block
 EntityFireworkRocket:
-  - FireworkRocketEntity
-  - EntityType.FIREWORK_ROCKET
-  - firework_rocket
-EntityFox:
-  - FoxEntity
-  - EntityType.FOX
-  - fox
-EntityFlying: FlyingEntity
+  - EntityFireworkRocket
+  - 22
+  - fireworks_rocket
+EntityFlying: EntityFlying
 EntityGhast:
-  - GhastEntity
-  - EntityType.GHAST
+  - EntityGhast
+  - 56
   - ghast
 EntityGiantZombie:
-  - GiantEntity
-  - EntityType.GIANT
+  - EntityGiantZombie
+  - 53
   - giant
 EntityGuardian:
-  - GuardianEntity
-  - EntityType.GUARDIAN
+  - EntityGuardian
+  - 68
   - guardian
-EntityHanging: HangingEntity
-EntityGolem: GolemEntity
+EntityHanging: EntityHanging
+EntityGolem: EntityGolem
 EntityHorse:
-  - HorseEntity
-  - EntityType.HORSE
+  - EntityHorse
+  - 100
   - horse
 EntityHusk:
-  - HuskEntity
-  - EntityType.HUSK
+  - EntityHusk
+  - 23
   - husk
 EntityIllusionIllager:
-  - IllusionerEntity
-  - EntityType.ILLUSIONER
-  - illusioner
+  - EntityIllusionIllager
+  - 37
+  - illusion_illager
 EntityItem:
-  - ItemEntity
-  - EntityType.ITEM
+  - EntityItem
+  - 1
   - item
 EntityItemFrame:
-  - ItemFrameEntity
-  - EntityType.ITEM_FRAME
+  - EntityItemFrame
+  - 18
   - item_frame
 EntityFireball:
-  - FireballEntity
-  - EntityType.FIREBALL
+  - EntityLargeFireball
+  - 12
   - fireball
 EntityLeashKnot:
-  - LeashKnotEntity
-  - EntityType.LEASH_KNOT
+  - EntityLeashKnot
+  - 8
   - leash_knot
 EntityLlama:
-  - LlamaEntity
-  - EntityType.LLAMA
+  - EntityLlama
+  - 103
   - llama
 EntityLlamaSpit:
-  - LlamaSpitEntity
-  - EntityType.LLAMA_SPIT
+  - EntityLlamaSpit
+  - 104
   - llama_spit
-EntityLiving: LivingEntity
+EntityLiving: EntityLivingBase
 EntityMagmaCube:
-  - MagmaCubeEntity
-  - EntityType.MAGMA_CUBE
+  - EntityMagmaCube
+  - 62
   - magma_cube
 EntityMinecart:
-  - MinecartEntity
-  - EntityType.MINECART
+  - EntityMinecartEmpty
+  - 42
   - minecart
 EntityMinecartChest:
-  - ChestMinecartEntity
-  - EntityType.CHEST_MINECART
+  - EntityMinecartChest
+  - 43
   - chest_minecart
 EntityMinecartCommandBlock:
-  - MinecartCommandBlockEntity
-  - EntityType.COMMAND_BLOCK_MINECART
-  - command_block_minecart
-EntityMinecartContainer: ContainerMinecartEntity
+  - EntityMinecartCommandBlock
+  - 40
+  - commandblock_minecart
+EntityMinecartContainer: EntityMinecartContainer
 EntityMinecartFurnace:
-  - FurnaceMinecartEntity
-  - EntityType.FURNACE_MINECART
+  - EntityMinecartFurnace
+  - 44
   - furnace_minecart
 EntityMinecartHopper:
-  - HopperMinecartEntity
-  - EntityType.HOPPER_MINECART
+  - EntityMinecartHopper
+  - 46
   - hopper_minecart
 EntityMinecartMobSpawner:
-  - SpawnerMinecartEntity
-  - EntityType.SPAWNER_MINECART
+  - EntityMinecartMobSpawner
+  - 47
   - spawner_minecart
 EntityMinecartTNT:
-  - TNTMinecartEntity
-  - EntityType.TNT_MINECART
+  - EntityMinecartTNT
+  - 45
   - tnt_minecart
-EntityMob: MobEntity
-EntityMonster: MonsterEntity
+EntityMob: EntityLiving
+EntityMonster: EntityMob
 EntityMule:
-  - MuleEntity
-  - EntityType.MULE
+  - EntityMule
+  - 32
   - mule
 EntityMooshroom:
-  - MooshroomEntity
-  - EntityType.MOOSHROOM
+  - EntityMooshroom
+  - 96
   - mooshroom
 EntityOcelot:
-  - OcelotEntity
-  - EntityType.OCELOT
+  - EntityOcelot
+  - 98
   - ocelot
 EntityPainting:
-  - PaintingEntity
-  - EntityType.PAINTING
+  - EntityPainting
+  - 9
   - painting
-EntityPanda:
-  - PandaEntity
-  - EntityType.PANDA
-  - panda
 EntityParrot:
-  - ParrotEntity
-  - EntityType.PARROT
+  - EntityParrot
+  - 105
   - parrot
 EntityPig:
-  - PigEntity
-  - EntityType.PIG
+  - EntityPig
+  - 90
   - pig
-EntityPillager:
-  - PillagerEntity
-  - EntityType.PILLAGER
-  - pillager
-EntityPufferfish:
-  - PufferfishEntity
-  - EntityType.PUFFERFISH
-  - pufferfish
 EntityPigZombie:
-  - ZombiePigmanEntity
-  - EntityType.ZOMBIE_PIGMAN
+  - EntityPigZombie
+  - 57
   - zombie_pigman
 EntityPolarBear:
-  - PolarBearEntity
-  - EntityType.POLAR_BEAR
+  - EntityPolarBear
+  - 102
   - polar_bear
 EntityTNTPrimed:
-  - TNTEntity
-  - EntityType.TNT
+  - EntityTNTPrimed
+  - 20
   - tnt
 EntityRabbit:
-  - RabbitEntity
-  - EntityType.RABBIT
+  - EntityRabbit
+  - 101
   - rabbit
-EntitySalmon:
-  - SalmonEntity
-  - EntityType.SALMON
-  - salmon
 EntitySheep:
-  - SheepEntity
-  - EntityType.SHEEP
+  - EntitySheep
+  - 91
   - sheep
-EntityShoulderRiding: ShoulderRidingEntity
+EntityShoulderRiding: EntityShoulderRiding
 EntityShulker:
-  - ShulkerEntity
-  - EntityType.SHULKER
+  - EntityShulker
+  - 69
   - shulker
 EntityShulkerBullet:
-  - ShulkerBulletEntity
-  - EntityType.SHULKER_BULLET
+  - EntityShulkerBullet
+  - 25
   - shulker_bullet
 EntitySilverfish:
-  - SilverfishEntity
-  - EntityType.SILVERFISH
+  - EntitySilverfish
+  - 60
   - silverfish
 EntitySkeleton:
-  - SkeletonEntity
-  - EntityType.SKELETON
+  - EntitySkeleton
+  - 51
   - skeleton
 EntitySkeletonHorse:
-  - SkeletonHorseEntity
-  - EntityType.SKELETON_HORSE
+  - EntitySkeletonHorse
+  - 28
   - skeleton_horse
 EntitySlime:
-  - SlimeEntity
-  - EntityType.SLIME
+  - EntitySlime
+  - 55
   - slime
 EntitySmallFireball:
-  - SmallFireballEntity
-  - EntityType.SMALL_FIREBALL
+  - EntitySmallFireball
+  - 13
   - small_fireball
 EntitySnowman:
-  - SnowGolemEntity
-  - EntityType.SNOW_GOLEM
-  - snow_golem
+  - EntitySnowman
+  - 97
+  - snowman
 EntitySnowball:
-  - SnowballEntity
-  - EntityType.SNOWBALL
+  - EntitySnowball
+  - 11
   - snowball
 EntitySpectralArrow:
-  - SpectralArrowEntity
-  - EntityType.SPECTRAL_ARROW
+  - EntitySpectralArrow
+  - 24
   - spectral_arrow
-EntitySpellcasterIllager: SpellcastingIllagerEntity
+EntitySpellcasterIllager: EntitySpellcasterIllager
 EntitySpider:
-  - SpiderEntity
-  - EntityType.SPIDER
+  - EntitySpider
+  - 52
   - spider
 EntitySquid:
-  - SquidEntity
-  - EntityType.SQUID
+  - EntitySquid
+  - 94
   - squid
 EntityStray:
-  - StrayEntity
-  - EntityType.STRAY
+  - EntityStray
+  - 6
   - stray
-EntityTraderLlama:
-  - TraderLlamaEntity
-  - EntityType.TRADER_LLAMA
-  - trader_llama
-EntityTameable: TameableEntity
-EntityThrowable: ThrowableEntity
-EntityTropicalFish:
-  - TropicalFishEntity
-  - EntityType.TROPICAL_FISH
-  - tropical_fish
-EntityTurtle:
-  - TurtleEntity
-  - EntityType.TURTLE
-  - turtle
+EntityTameable: EntityTameable
+EntityThrowable: EntityThrowable
 EntityEgg:
-  - EggEntity
-  - EntityType.EGG
+  - EntityEgg
+  - 7
   - egg
 EntityEnderPearl:
-  - EnderPearlEntity
-  - EntityType.ENDER_PEARL
+  - EntityEnderPearl
+  - 14
   - ender_pearl
 EntityExpBottle:
-  - ExperienceBottleEntity
-  - EntityType.EXPERIENCE_BOTTLE
-  - experience_bottle
+  - EntityExpBottle
+  - 17
+  - xp_bottle
 EntityPotion:
-  - PotionEntity
-  - EntityType.POTION
+  - EntityPotion
+  - 16
   - potion
-EntityTrident:
-  - TridentEntity
-  - EntityType.TRIDENT
-  - trident
 EntityVex:
-  - VexEntity
-  - EntityType.VEX
+  - EntityVex
+  - 35
   - vex
 EntityVillager:
-  - VillagerEntity
-  - EntityType.VILLAGER
+  - EntityVillager
+  - 120
   - villager
 EntityIronGolem:
-  - IronGolemEntity
-  - EntityType.IRON_GOLEM
-  - iron_golem
+  - EntityIronGolem
+  - 99
+  - villager_golem
 EntityVindicator:
-  - VindicatorEntity
-  - EntityType.VINDICATOR
-  - vindicator
-EntityWaterMob: WaterMobEntity
-EntityWanderingTrader:
-  - WanderingTraderEntity
-  - EntityType.WANDERING_TRADER
-  - wandering_trader
+  - EntityVindicator
+  - 36
+  - vindication_illager
+EntityWaterMob: EntityWaterMob
 EntityWitch:
-  - WitchEntity
-  - EntityType.WITCH
+  - EntityWitch
+  - 66
   - witch
 EntityWither:
-  - WitherEntity
-  - EntityType.WITHER
+  - EntityWither
+  - 64
   - wither
 EntityWitherSkeleton:
-  - WitherSkeletonEntity
-  - EntityType.WITHER_SKELETON
+  - EntityWitherSkeleton
+  - 5
   - wither_skeleton
 EntityWitherSkull:
-  - WitherSkullEntity
-  - EntityType.WITHER_SKULL
+  - EntityWitherSkull
+  - 19
   - wither_skull
 EntityWolf:
-  - WolfEntity
-  - EntityType.WOLF
+  - EntityWolf
+  - 95
   - wolf
 EntityZombie:
-  - ZombieEntity
-  - EntityType.ZOMBIE
+  - EntityZombie
+  - 54
   - zombie
 EntityZombieHorse:
-  - ZombieHorseEntity
-  - EntityType.ZOMBIE_HORSE
+  - EntityZombieHorse
+  - 29
   - zombie_horse
 EntityZombieVillager:
-  - ZombieVillagerEntity
-  - EntityType.ZOMBIE_VILLAGER
+  - EntityZombieVillager
+  - 27
   - zombie_villager
-EntityPhantom:
-  - PhantomEntity
-  - EntityType.PHANTOM
-  - phantom
-EntityRavager:
-  - RavagerEntity
-  - EntityType.RAVAGER
-  - ravager
 EntityLightningBolt:
-  - LightningBoltEntity
-  - EntityType.LIGHTNING_BOLT
+  - EntityLightningBolt
+  - EntityList.LIGHTNING_BOLT
   - lightning_bolt
 EntityPlayer:
-  - PlayerEntity
-  - EntityType.PLAYER
+  - EntityPlayer
+  - EntityList.PLAYER
   - player
 EntityPlayerMP:
   - EntityPlayerMP
-  - EntityType.PLAYER
+  - EntityList.PLAYER
   - player
 EntityFishHook:
-  - FishingBobberEntity
-  - EntityType.FISHING_BOBBER
-  - fishing_bobber
+  - EntityFishHook
