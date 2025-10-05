@@ -1,7 +1,7 @@
 <#--
  # MCreator (https://mcreator.net/)
  # Copyright (C) 2012-2020, Pylo
- # Copyright (C) 2020-2023, Pylo, opensource contributors
+ # Copyright (C) 2020-2025, Pylo, opensource contributors
  #
  # This program is free software: you can redistribute it and/or modify
  # it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ package ${package}.potion;
 
 <#compress>
 public class ${name}MobEffect extends Potion {
+	private final ResourceLocation potionIcon;
 
 	public ${name}MobEffect() {
 		super(${data.mobEffectCategory == "BENEFICIAL"}, ${data.color.getRGB()});
@@ -43,7 +44,8 @@ public class ${name}MobEffect extends Potion {
 		this.registerPotionAttributeModifier(${modifier.attribute}, "${w.getUUID(registryname + "_" + modifier?index)}", ${modifier.amount},
 				${getAttributeOperation(modifier.operation)});
 		</#list>
-		}
+		potionIcon = new ResourceLocation("${modid}:textures/mob_effect/${registryname}.png");
+	}
 
 	<#if data.mobEffectCategory == "BENEFICIAL">
 		@Override public boolean isBeneficial() {
@@ -122,6 +124,16 @@ public class ${name}MobEffect extends Potion {
 					}
 				</#if>
 	</#if>
+
+	@Override @SideOnly(Side.CLIENT) public void renderInventoryEffect(PotionEffect effect, Gui gui, int x, int y, float z) {
+	    Minecraft.getMinecraft().getTextureManager().bindTexture(potionIcon);
+	    gui.drawModalRectWithCustomSizedTexture(x + 6, y + 7, 0, 0, 18, 18, 18, 18);
+	}
+
+	@Override @SideOnly(Side.CLIENT) public void renderHUDEffect(PotionEffect effect, Gui gui, int x, int y, float z, float alpha) {
+	    Minecraft.getMinecraft().getTextureManager().bindTexture(potionIcon);
+	    gui.drawModalRectWithCustomSizedTexture(x + 3, y + 3, 0, 0, 18, 18, 18, 18);
+    }
 }
 </#compress>
 <#-- @formatter:on -->
