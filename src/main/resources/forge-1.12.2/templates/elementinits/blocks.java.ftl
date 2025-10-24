@@ -58,7 +58,7 @@ package ${package}.init;
 <#assign jumpF = blocks?filter(block -> block.jumpFactor?? && block.jumpFactor != 1.0)>
 
 @Mod.EventBusSubscriber(modid = "${modid}") public class ${JavaModName}Blocks {
-    private static final List<Block> REGISTRY = new ArrayList<>();
+	private static final List<Block> REGISTRY = new ArrayList<>();
 
 	<#list blocks as block>
 		<#if block.getModElement().getTypeString() == "dimension">
@@ -66,20 +66,21 @@ package ${package}.init;
 				register("${block.getModElement().getRegistryName()}_portal", ${block.getModElement().getName()}PortalBlock::new);
 		<#else>
 			public static final Block ${block.getModElement().getRegistryNameUpper()} =
-			    register("${block.getModElement().getRegistryName()}", ${block.getModElement().getName()}Block::new);
+				register("${block.getModElement().getRegistryName()}", ${block.getModElement().getName()}Block::new);
 		</#if>
 	</#list>
 
 	// Start of user code block custom blocks
 	// End of user code block custom blocks
 
-    private static Block register(String registryname, Supplier<Block> block) {
-		REGISTRY.add(block.get().setRegistryName(new ResourceLocation(${JavaModName}.MODID, registryname)));
-    	return block;
-    }
+	private static Block register(String registryname, Supplier<Block> block) {
+	    Block block = block.get().setRegistryName(new ResourceLocation(${JavaModName}.MODID, registryname));
+	    REGISTRY.add(block);
+	    return block;
+	}
 
 	@SubscribeEvent public static void registerBlocks(RegistryEvent.Register<Block> event) {
-		event.getRegistry().registerAll(REGISTRY.toArray(new Block[0]));
+	    event.getRegistry().registerAll(REGISTRY.toArray(new Block[0]));
 	}
 
 	<#if hasTintedBlocks || hasTintedBlockItems>
@@ -115,7 +116,7 @@ package ${package}.init;
         <#compress>
         Block below = event.getWorld().getBlockState(event.getPos().down()).getBlock();
 		<#list noteBlockInstrument as block>
-		if (below == ${JavaModName}Blocks.${block.getModElement().getRegistryNameUpper()}.get()) {
+		if (below == ${JavaModName}Blocks.${block.getModElement().getRegistryNameUpper()}) {
             event.setInstrument(${generator.map(block.noteBlockInstrument, "noteblockinstruments")});
         }<#sep>else
 		</#list>
@@ -126,7 +127,7 @@ package ${package}.init;
 	<#if jumpF?size != 0>
 	@SubscribeEvent public static void onMobJump(LivingEvent.LivingJumpEvent event) {
         <#compress>
-		LivingEntity entity = event.getEntityLiving();
+		EntityLivingBase entity = event.getEntityLiving();
         IBlockState state = entity.world.getBlockState(entity.getPosition().down());
         IBlockState stateUp = entity.world.getBlockState(entity.getPosition());
 		if<#list jumpF as block>
