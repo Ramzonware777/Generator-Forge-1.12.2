@@ -228,5 +228,5 @@
 </#function>
 
 <#function splitMetadata mapped>
-    <#return mapped?split("#")>
+    <#return mapped.split("#")>
 </#function>
