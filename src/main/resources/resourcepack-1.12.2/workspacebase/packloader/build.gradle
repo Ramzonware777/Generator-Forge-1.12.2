@@ -1,6 +1,6 @@
 plugins {
     id 'eclipse'
-    id 'net.minecraftforge.gradle' version '[6.0.36,6.2)'
+    id 'net.minecraftforge.gradle' version '[6.0.47,6.2)'
 }
 
 version = '1.0'
@@ -37,4 +37,17 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        force 'org.ow2.asm:asm-debug-all:5.2'
+        eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.ow2.asm') {
+                details.useVersion '5.2'
+            }
+        }
+    }
+
+    exclude group: 'net.minecraftforge', module: 'mergetool'
 }
