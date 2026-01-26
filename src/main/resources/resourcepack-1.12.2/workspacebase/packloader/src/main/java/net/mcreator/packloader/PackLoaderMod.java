@@ -49,6 +49,7 @@ public class PackLoaderMod {
         if (anyChanged) {
             repo.setRepositories(selectedPacks);
             repo.updateRepositoryEntriesAll();
+            FMLClientHandler.instance().refreshResources();
         }
     }
 }
