@@ -35,7 +35,7 @@ package ${package}.potion;
 
 <#compress>
 public class ${name}MobEffect extends Potion {
-	private final ResourceLocation potionIcon;
+	private static final ResourceLocation potionIcon = new ResourceLocation("${modid}:textures/mob_effect/${registryname}.png");
 
 	public ${name}MobEffect() {
 		super(${data.mobEffectCategory == "BENEFICIAL"}, ${data.color.getRGB()});
@@ -44,7 +44,6 @@ public class ${name}MobEffect extends Potion {
 		this.registerPotionAttributeModifier(${modifier.attribute}, "${w.getUUID(registryname + "_" + modifier?index)}", ${modifier.amount},
 				${getAttributeOperation(modifier.operation)});
 		</#list>
-		potionIcon = new ResourceLocation("${modid}:textures/mob_effect/${registryname}.png");
 	}
 
 	<#if data.mobEffectCategory == "BENEFICIAL">

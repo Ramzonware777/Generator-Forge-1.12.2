@@ -81,13 +81,12 @@ public class ${name}Message implements IMessage {
 
     public static class ${name}MessageHandler implements IMessageHandler<${name}Message, IMessage> {
         @Override public IMessage onMessage(${name}Message message, MessageContext context) {
-            if(context.side == Side.SERVER) {
-                context.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-                        <#if hasProcedure(data.onKeyPressed) || hasProcedure(data.onKeyReleased)>
-                        pressAction(context.getServerHandler().player, message.type, message.pressedms);
-                        </#if>
-                });
-            }
+	    	EntityPlayerMP entity = context.getServerHandler().player;
+	    	entity.getServerWorld().addScheduledTask(() -> {
+	    	    <#if hasProcedure(data.onKeyPressed) || hasProcedure(data.onKeyReleased)>
+	    	    pressAction(entity, message.type, message.pressedms);
+	    	    </#if>
+	    	});
 
             return null;
         }

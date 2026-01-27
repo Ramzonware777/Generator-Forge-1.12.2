@@ -37,7 +37,9 @@ package ${package}.item.extension;
 public class ${name}ItemExtension {
 		public static void init() {
 			BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(${mappedMCItemToItem(data.item)}, new BehaviorDefaultDispenseItem() {
-				public ItemStack dispenseStack(IBlockSource blockSource, ItemStack stack) {
+				private boolean successful = true;
+
+				@Override public ItemStack dispenseStack(IBlockSource blockSource, ItemStack stack) {
 					<#assign hasSuccessCondition = hasProcedure(data.dispenseSuccessCondition)>
 					ItemStack itemstack = stack.copy();
 					World world = blockSource.getWorld();
@@ -65,6 +67,10 @@ public class ${name}ItemExtension {
 						itemstack.shrink(1);
 						return itemstack;
 					</#if>
+				}
+
+				@Override protected void playDispenseSound(IBlockSource source) {
+				    source.getWorld().playEvent(successful ? 1000 : 1001, source.getBlockPos(), 0);
 				}
 			});
 		}
