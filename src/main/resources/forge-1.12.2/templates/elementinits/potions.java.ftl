@@ -40,16 +40,16 @@ package ${package}.init;
     private static final List<PotionType> REGISTRY = new ArrayList<>();
 
 	<#list potions as potion>
-		public static final PotionType ${potion.getModElement().getRegistryNameUpper()} = register("${potion.getModElement().getRegistryName()}", () -> new PotionType(
+		public static final PotionType ${potion.getModElement().getRegistryNameUpper()} = register("${potion.getModElement().getRegistryName()}", new PotionType(
 			<#list potion.effects as effect>
 			new PotionEffect(${effect.effect}, ${effect.getDuration()}, ${effect.amplifier}, ${effect.ambient}, ${effect.showParticles})<#sep>,
 			</#list>));
 	</#list>
 
-	private static PotionType register(String registryname, Supplier<PotionType> potion) {
-		PotionType instance = potion.get().setRegistryName(registryname);
-		REGISTRY.add(instance);
-		return instance;
+	private static PotionType register(String registryname, PotionType potion) {
+		potion.setRegistryName(registryname);
+		REGISTRY.add(potion);
+		return potion;
 	}
 
 	@SubscribeEvent public static void registerPotions(RegistryEvent.Register<PotionType> event) {

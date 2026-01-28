@@ -68,7 +68,7 @@ import org.lwjgl.input.Keyboard;
 		<#list keybinds as keybind>
 				<#if hasProcedure(keybind.onKeyPressed) || hasProcedure(keybind.onKeyReleased)>
 						if(Keyboard.isKeyDown(${keybind.getModElement().getRegistryNameUpper()}.getKeyCode())) {
-								<#if hasProcedure(keybind.onKeyPressed)>
+								<#if hasProcedure(keybind.onKeyPressed)> // TODO
 									${JavaModName}.PACKET_HANDLER.sendToServer(new ${keybind.getModElement().getName()}Message(0, 0));
 									${keybind.getModElement().getName()}Message.pressAction(Minecraft.getMinecraft().player, 0, 0);
 								</#if>

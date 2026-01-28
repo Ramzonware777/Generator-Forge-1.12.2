@@ -38,12 +38,15 @@
 package ${package}.init;
 
 @Mod.EventBusSubscriber public class ${JavaModName}Sounds {
-	public static final Map<ResourceLocation, SoundEvent> REGISTRY = new HashMap<>();
+	private static final Map<ResourceLocation, SoundEvent> REGISTRY = new HashMap<>();
 
-	static {
-		<#list sounds as sound>
-		REGISTRY.put(new ResourceLocation("${modid}" ,"${sound}"), new SoundEvent(new ResourceLocation("${modid}", "${sound}")));
-		</#list>
+	<#list sounds as sound>
+	public static final ResourceLocation ${sound.getJavaName()} = REGISTRY.put(new ResourceLocation("${modid}" ,"${sound}"), new SoundEvent(new ResourceLocation("${modid}", "${sound}")));
+	</#list>
+
+	private static ResourceLocation register(String id) {
+		ResourceLocation resourceLocation = new ResourceLocation("${modid}" , id);
+		return REGISTRY.put(resourceLocation, new SoundEvent(resourceLocation));
 	}
 
 	@SubscribeEvent public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {

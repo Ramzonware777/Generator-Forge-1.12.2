@@ -63,6 +63,18 @@ public class ${name}Menu extends Container implements ${JavaModName}Menus.MenuAc
 	private Entity boundEntity = null;
 	private TileEntity boundBlockEntity = null;
 
+	public static ${name}Menu makeBlockGUI(EntityPlayer inv, int x, int y, int z) {
+		return new ${name}Menu(inv.inventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(new BlockPos(x, y, z)));
+	}
+
+	public static ${name}Menu makeItemGUI(EntityPlayer inv) {
+		return new ${name}Menu(inv.inventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(inv.getPosition()).writeByte(inv.getActiveHand() == EnumHand.MAIN_HAND ? 0 : 1));
+	}
+
+	public static ${name}Menu makeEntityGUI(EntityPlayer inv) {
+		return new ${name}Menu(inv.inventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(inv.getPosition()).writeByte(0).writeVarInt(inv.getEntityId()));
+	}
+
 	public ${name}Menu(InventoryPlayer inv, PacketBuffer extraData) {
 		this.entity = inv.player;
 		this.world = inv.player.world;

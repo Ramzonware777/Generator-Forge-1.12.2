@@ -28,7 +28,7 @@
  # exception.
 -->
 
-<#-- @formatter:off -->
+<#-- @formatter:off --> //TODO
 <#include "procedures.java.ftl">
 package ${package}.command;
 @Mod.EventBusSubscriber<#if data.type == "CLIENTSIDE">(value = Dist.CLIENT)</#if>

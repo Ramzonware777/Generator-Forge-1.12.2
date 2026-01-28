@@ -39,17 +39,16 @@ package ${package}.init;
     private static final List<VillagerRegistry.VillagerProfession> REGISTRY = new ArrayList<>();
 
 	<#list villagerprofessions as villagerprofession>
-		public static final VillagerRegistry.VillagerProfession ${villagerprofession.getModElement().getRegistryNameUpper()} = register(() -> new VillagerRegistry.VillagerProfession(
+		public static final VillagerRegistry.VillagerProfession ${villagerprofession.getModElement().getRegistryNameUpper()} = register(new VillagerRegistry.VillagerProfession(
 		    "${modid}:${villagerprofession.getModElement().getRegistryName()}",
 		    "${modid}:textures/entities/${villagerprofession.professionTextureFile}",
 		    "${modid}:textures/entities/${villagerprofession.zombifiedProfessionTextureFile}"));
-		public static final VillagerRegistry.VillagerCareer ${villagerprofession.getModElement().getRegistryNameUpper()}_CAREER = new VillagerRegistry.VillagerCareer(${villagerprofession.getModElement().getRegistryNameUpper()}, "${villagerprofession.getModElement().getRegistryName()}");
+		public static final VillagerRegistry.VillagerCareer ${villagerprofession.getModElement().getRegistryNameUpper()}_CAREER = new VillagerRegistry.VillagerCareer(${villagerprofession.getModElement().getRegistryNameUpper()}, "${modid}:${villagerprofession.getModElement().getRegistryName()}");
 	</#list>
 
-	private static VillagerRegistry.VillagerProfession register(Supplier<VillagerRegistry.VillagerProfession> profession) {
-		VillagerRegistry.VillagerProfession instance = profession.get();
-		REGISTRY.add(instance);
-		return instance;
+	private static VillagerRegistry.VillagerProfession register(VillagerRegistry.VillagerProfession profession) {
+		REGISTRY.add(profession);
+		return profession;
 	}
 
 	@SubscribeEvent public static void registerVillagerProfessions(RegistryEvent.Register<VillagerRegistry.VillagerProfession> event) {

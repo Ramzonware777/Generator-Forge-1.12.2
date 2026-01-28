@@ -37,18 +37,24 @@ package ${package}.init;
 public class ${JavaModName}Screens {
 
 	<#list guis as gui>
-	public static final int ${gui.getModElement().getRegistryNameUpper()}_ID = ${gui_index};
+	public static final int ${gui.getModElement().getRegistryNameUpper()}_ID = ${gui_index * 3};
+	public static final int ${gui.getModElement().getRegistryNameUpper()}_ID_ITEM = ${gui_index * 3 + 1};
+	public static final int ${gui.getModElement().getRegistryNameUpper()}_ID_ENTITY = ${gui_index * 3 + 2};
 	</#list>
 
 	public static void load(${JavaModName} mod) {
         NetworkRegistry.INSTANCE.registerGuiHandler(mod, new GuiHandler());
 	}
 
-	protected static class GuiHandler implements IGuiHandler {
+	private static class GuiHandler implements IGuiHandler {
 		@Override public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
             <#list guis as gui>
 				if (id == ${gui.getModElement().getRegistryNameUpper()}_ID)
-					return new ${gui.getModElement().getName()}Menu(player.inventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(new BlockPos(x, y, z)));
+					return new ${gui.getModElement().getName()}Menu.makeBlockGUI(player, x, y, z);
+				else if (id == ${gui.getModElement().getRegistryNameUpper()}_ID_ITEM)
+					return new ${gui.getModElement().getName()}Menu.makeItemGUI(player);
+				else if (id == ${gui.getModElement().getRegistryNameUpper()}_ID_ENTITY)
+					return new ${gui.getModElement().getName()}Menu.makeEntityGUI(player);
 			    <#sep>else
 			</#list>
 
@@ -58,7 +64,12 @@ public class ${JavaModName}Screens {
 		@Override public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
             <#list guis as gui>
 				if (id == ${gui.getModElement().getRegistryNameUpper()}_ID)
-					return new ${gui.getModElement().getName()}Screen(player.inventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(new BlockPos(x, y, z)));
+					return new ${gui.getModElement().getName()}Menu.makeBlockGUI(player, x, y, z);
+				else if (id == ${gui.getModElement().getRegistryNameUpper()}_ID_ITEM)
+					return new ${gui.getModElement().getName()}Menu.makeItemGUI(player);
+				else if (id == ${gui.getModElement().getRegistryNameUpper()}_ID_ENTITY)
+					return new ${gui.getModElement().getName()}Menu.makeEntityGUI(player);
+			    <#sep>else
 			</#list>
 
 			return null;
