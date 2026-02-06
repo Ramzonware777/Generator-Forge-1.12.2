@@ -31,7 +31,7 @@ scopes:
     read: instance.${var.getName()} = NBTUtil.readBlockState(nbt.getCompoundTag("${var.getName()}"));
     write: nbt.setTag("${var.getName()}", NBTUtil.writeBlockState(instance.${var.getName()}));
     get: |
-      /*@BlockState*/(${JavaModName}Variables.PlayerVariables.orElse(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null)).${name})
+      /*@BlockState*/((Objects.requireNonNullElseGet(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).${name})
     set: |
       <#include "mcitems.ftl">
       {
@@ -46,7 +46,7 @@ scopes:
     read: instance.${var.getName()} = NBTUtil.readBlockState(nbt.getCompoundTag("${var.getName()}"));
     write: nbt.setTag("${var.getName()}", NBTUtil.writeBlockState(instance.${var.getName()}));
     get: |
-      /*@BlockState*/(${JavaModName}Variables.PlayerVariables.orElse(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null)).${name})
+      /*@BlockState*/((Objects.requireNonNullElseGet(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).${name})
     set: |
       <#include "mcitems.ftl">
       {

@@ -29,7 +29,7 @@ scopes:
     read: instance.${var.getName()} = nbt.getBoolean("${var.getName()}");
     write: nbt.setBoolean("${var.getName()}", instance.${var.getName()});
     get: |
-      (${JavaModName}Variables.PlayerVariables.orElse(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null)).${name})
+      ((Objects.requireNonNullElseGet(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).${name})
     set: |
       {
         boolean _setval = ${opt.removeParentheses(value)};
@@ -43,7 +43,7 @@ scopes:
     read: instance.${var.getName()} = nbt.getBoolean("${var.getName()}");
     write: nbt.setBoolean("${var.getName()}", instance.${var.getName()});
     get: |
-      (${JavaModName}Variables.PlayerVariables.orElse(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null)).${name})
+      ((Objects.requireNonNullElseGet(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).${name})
     set: |
       {
         boolean _setval = ${opt.removeParentheses(value)};
