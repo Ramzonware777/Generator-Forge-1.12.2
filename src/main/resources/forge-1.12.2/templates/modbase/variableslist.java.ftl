@@ -6,7 +6,7 @@ import ${package}.${JavaModName};
 import net.minecraft.nbt.NBTBase;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
-public class ${JavaModName}Variables {
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD) public class ${JavaModName}Variables {
 
 	<#if w.hasVariablesOfScope("GLOBAL_SESSION")>
 		<#list variables as var>
@@ -204,17 +204,6 @@ public class ${JavaModName}Variables {
 		public SavedDataSyncMessage() {
 		}
 
-		public SavedDataSyncMessage(int type, WorldSavedData data) {
-			this.type = type;
-			this.data = data;
-		}
-
-		@Override public void toBytes(ByteBuf buffer) {
-			buffer.writeInt(this.type);
-			if (this.data != null)
-				ByteBufUtils.writeTag(buffer, this.data.writeToNBT(new NBTTagCompound()));
-		}
-
 		@Override public void fromBytes(ByteBuf buffer) {
 			this.type = buffer.readInt();
 
@@ -227,22 +216,35 @@ public class ${JavaModName}Variables {
 					((WorldVariables) this.data).readFromNBT(nbt);
 			}
 		}
-	}
 
-	public static class SavedDataSyncMessageHandler implements IMessageHandler<SavedDataSyncMessage, IMessage> {
-		@Override public IMessage onMessage(SavedDataSyncMessage message, MessageContext context) {
+		public SavedDataSyncMessage(int type, WorldSavedData data) {
+			this.type = type;
+			this.data = data;
+		}
 
-            if (context.side == Side.CLIENT && message.data != null) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
-                        if (message.type == 0)
-                            MapVariables.clientSide = (MapVariables) message.data;
-                        else
-                            WorldVariables.clientSide = (WorldVariables) message.data;
-                });
+		@Override public void toBytes(ByteBuf buffer) {
+			buffer.writeInt(this.type);
+			if (this.data != null)
+			    ByteBufUtils.writeTag(buffer, this.data.write(new NBTTagCompound()));
+		}
+
+        public static class SavedDataSyncMessageHandler implements IMessageHandler<SavedDataSyncMessage, IMessage> {
+            @Override public IMessage onMessage(SavedDataSyncMessage message, MessageContext context) {
+                if (context.side == Side.CLIENT)
+                    Minecraft.getMinecraft().addScheduledTask(() -> syncData(message));
+
+                return null;
             }
 
-			return null;
-		}
+            private void syncData(SavedDataSyncMessage message) {
+                if (message.data != null) {
+					if (message.type == 0)
+						MapVariables.clientSide = (MapVariables) message.data;
+					else
+						WorldVariables.clientSide = (WorldVariables) message.data;
+				}
+            }
+        }
 	}
 	</#if>
 
@@ -256,22 +258,24 @@ public class ${JavaModName}Variables {
 				event.addCapability(new ResourceLocation("${modid}", "player_variables"), new PlayerVariablesProvider());
 		}
 
-		private final PlayerVariables instance = new PlayerVariables();
+		private final PlayerVariables playerVariables = new PlayerVariables();
+
+		private final Optional<PlayerVariables> instance = Optional.of(() -> playerVariables);
 
 		@Override public boolean hasCapability(Capability<?> cap, EnumFacing side) {
 			return cap == PLAYER_VARIABLES_CAPABILITY;
 		}
 
 		@Override public <T> T getCapability(Capability<T> cap, EnumFacing side) {
-			return cap == PLAYER_VARIABLES_CAPABILITY ? (T) instance : null;
+			return cap == PLAYER_VARIABLES_CAPABILITY ? (T) playerVariables : null;
 		}
 
 		@Override public NBTBase serializeNBT() {
-			return PLAYER_VARIABLES_CAPABILITY.getStorage().writeNBT(PLAYER_VARIABLES_CAPABILITY, PlayerVariables.orElseThrow(this.instance), null);
+			return PLAYER_VARIABLES_CAPABILITY.getStorage().writeNBT(PLAYER_VARIABLES_CAPABILITY, this.instance.orElseThrow(RuntimeException::new), null);
 		}
 
 		@Override public void deserializeNBT(NBTBase nbt) {
-			PLAYER_VARIABLES_CAPABILITY.getStorage().readNBT(PLAYER_VARIABLES_CAPABILITY, PlayerVariables.orElseThrow(this.instance), null, nbt);
+			PLAYER_VARIABLES_CAPABILITY.getStorage().readNBT(PLAYER_VARIABLES_CAPABILITY, this.instance.orElseThrow(RuntimeException::new), null, nbt);
 		}
 	}
 
@@ -317,45 +321,17 @@ public class ${JavaModName}Variables {
 				${JavaModName}.PACKET_HANDLER.sendTo(new PlayerVariablesSyncMessage(this), (EntityPlayerMP) entity);
 		}
 
-		public static PlayerVariables orElse(PlayerVariables val, PlayerVariables other) {
-			return val != null ? val : other;
-        }
-
-		public static PlayerVariables orElse(PlayerVariables val) {
-			return orElse(val, new PlayerVariables());
-        }
-
-        public static <X extends Throwable> PlayerVariables orElseThrow(PlayerVariables val, NonNullSupplier<? extends X> exceptionSupplier) throws X {
-            if (val != null)
-                return val;
-            throw exceptionSupplier.get();
-        }
-
-        public static <X extends Throwable> PlayerVariables orElseThrow(PlayerVariables val) throws X {
-			return orElseThrow(val, RuntimeException::new);
-        }
-
-        @FunctionalInterface
-        public static interface NonNullSupplier<T> {
-            @Nonnull T get();
-        }
-
-        @FunctionalInterface
-        public static interface NonNullConsumer<T> {
-            void accept(@Nonnull T t);
-        }
-
-        public static void ifPresent(PlayerVariables val, NonNullConsumer<? super PlayerVariables> consumer) {
-            Objects.requireNonNull(consumer);
-            if (val != null)
-                consumer.accept(val);
-        }
 	}
 
 	public static class PlayerVariablesSyncMessage implements IMessage {
 		private PlayerVariables data;
 
 		public PlayerVariablesSyncMessage() {
+		}
+
+		@Override public void fromBytes(ByteBuf buffer) {
+			this.data = new PlayerVariables();
+			new PlayerVariablesStorage().readNBT(null, this.data, null, ByteBufUtils.readTag(buffer));
 		}
 
 		public PlayerVariablesSyncMessage(PlayerVariables data) {
@@ -366,28 +342,24 @@ public class ${JavaModName}Variables {
 			ByteBufUtils.writeTag(buffer, (NBTTagCompound) new PlayerVariablesStorage().writeNBT(null, this.data, null));
 		}
 
-		@Override public void fromBytes(ByteBuf buffer) {
-			this.data = new PlayerVariables();
-			new PlayerVariablesStorage().readNBT(null, this.data, null, ByteBufUtils.readTag(buffer));
-		}
-	}
+		public static class PlayerVariablesSyncMessageHandler implements IMessageHandler<PlayerVariablesSyncMessage, IMessage> {
+            @Override public IMessage onMessage(PlayerVariablesSyncMessage message, MessageContext context) {
+                if (context.side == Side.CLIENT)
+                    Minecraft.getMinecraft().addScheduledTask(() -> syncData(message));
 
-	public static class PlayerVariablesSyncMessageHandler implements IMessageHandler<PlayerVariablesSyncMessage, IMessage> {
-        @Override public IMessage onMessage(PlayerVariablesSyncMessage message, MessageContext context) {
-            if(context.side == Side.CLIENT) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
-                        PlayerVariables variables = PlayerVariables.orElse((PlayerVariables) Minecraft.getMinecraft().player.getCapability(PLAYER_VARIABLES_CAPABILITY, null));
-                        <#list variables as var>
-                            <#if var.getScope().name() == "PLAYER_LIFETIME" || var.getScope().name() == "PLAYER_PERSISTENT">
-                            variables.${var.getName()} = message.data.${var.getName()};
-                            </#if>
-                        </#list>
-                });
+                return null;
             }
 
-            return null;
-       	}
-    }
+		    private void syncData(PlayerVariablesSyncMessage message) {
+		        PlayerVariables variables = Objects.requireNonNullElseGet((PlayerVariables) Minecraft.getMinecraft().player.getCapability(PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new);
+		        <#list variables as var>
+		            <#if var.getScope().name() == "PLAYER_LIFETIME" || var.getScope().name() == "PLAYER_PERSISTENT">
+		            variables.${var.getName()} = message.data.${var.getName()};
+		            </#if>
+		        </#list>
+		    }
+		}
+	}
 	</#if>
 }
 <#-- @formatter:on -->
