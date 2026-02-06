@@ -33,22 +33,24 @@ public class ${JavaModName}Variables {
 		<#if w.hasVariablesOfScope("PLAYER_LIFETIME") || w.hasVariablesOfScope("PLAYER_PERSISTENT")>
 		@SubscribeEvent public static void onPlayerLoggedInSyncPlayerVariables(PlayerEvent.PlayerLoggedInEvent event) {
 			if (!event.player.world.isRemote)
-				PlayerVariables.orElse((PlayerVariables) event.player.getCapability(PLAYER_VARIABLES_CAPABILITY, null)).syncPlayerVariables(event.player);
+				Objects.requireNonNullElseGet((PlayerVariables) event.player.getCapability(PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).syncPlayerVariables(event.player);
 		}
 
 		@SubscribeEvent public static void onPlayerRespawnedSyncPlayerVariables(PlayerEvent.PlayerRespawnEvent event) {
 			if (!event.player.world.isRemote)
-				PlayerVariables.orElse((PlayerVariables) event.player.getCapability(PLAYER_VARIABLES_CAPABILITY, null)).syncPlayerVariables(event.player);
+				Objects.requireNonNullElseGet((PlayerVariables) event.player.getCapability(PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).syncPlayerVariables(event.player);
 		}
 
 		@SubscribeEvent public static void onPlayerChangedDimensionSyncPlayerVariables(PlayerEvent.PlayerChangedDimensionEvent event) {
 			if (!event.player.world.isRemote)
-				PlayerVariables.orElse((PlayerVariables) event.player.getCapability(PLAYER_VARIABLES_CAPABILITY, null)).syncPlayerVariables(event.player);
+				Objects.requireNonNullElseGet((PlayerVariables) event.player.getCapability(PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).syncPlayerVariables(event.player);
 		}
 
-		@SubscribeEvent public static void clonePlayer(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
-			PlayerVariables original = PlayerVariables.orElse((PlayerVariables) event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null));
-			PlayerVariables clone = PlayerVariables.orElse((PlayerVariables) event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null));
+		@SubscribeEvent public static void clonePlayer(PlayerEvent.Clone event) {
+			// event.getOriginal().revive();
+
+			PlayerVariables original = Objects.requireNonNullElseGet((PlayerVariables) event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new);
+			PlayerVariables clone = Objects.requireNonNullElseGet((PlayerVariables) event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new);
 			<#list variables as var>
 				<#if var.getScope().name() == "PLAYER_PERSISTENT">
 				clone.${var.getName()} = original.${var.getName()};

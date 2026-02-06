@@ -159,6 +159,7 @@ public class ${name}Entity extends EntityArrow {
 		super.onUpdate();
 
 		<#if (data.modelWidth > 0.5) || (data.modelHeight > 0.5)>
+		if (!this.hasNoGravity()) {
 		    this.world.getCollisionShapes(this, this.getBoundingBox()).forEach(collision -> {
 				for (AxisAlignedBB blockAABB : collision.toBoundingBoxList()) {
 					if (this.getBoundingBox().intersects(blockAABB)) {
@@ -169,6 +170,7 @@ public class ${name}Entity extends EntityArrow {
 					}
 				}
 			});
+		}
 		</#if>
 
 		<#if hasProcedure(data.onFlyingTick)>

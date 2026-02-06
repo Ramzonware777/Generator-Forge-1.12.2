@@ -34,7 +34,7 @@
  */
 package ${package}.init;
 <#assign spawn_overworld = biomes?filter(biome -> biome.spawnBiome)>
-<#if spawn_overworld?has_content>@Mod.EventBusSubscriber</#if> public class ${JavaModName}Biomes {
+@Mod.EventBusSubscriber public class ${JavaModName}Biomes {
     private static final List<Biome> REGISTRY = new ArrayList<>();
 
     <#list biomes as biome>
@@ -52,7 +52,7 @@ package ${package}.init;
 	}
 
     <#if spawn_overworld?has_content>
-    @SubscribeEvent public static void init(FMLCommonSetupEvent event) {
+    @SubscribeEvent public static void init(FMLInitializationEvent event) {
     	<#list spawn_overworld as biome>
     		${biome.getModElement().getName()}Biome.init();
     	</#list>
