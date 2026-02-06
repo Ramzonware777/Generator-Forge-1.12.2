@@ -31,8 +31,7 @@ scopes:
     read: instance.${var.getName()} = new ItemStack(nbt.getCompoundTag("${var.getName()}"));
     write: nbt.setTag("${var.getName()}", instance.${var.getName()}.writeToNBT(new NBTTagCompound()));
     get: |
-      /*@ItemStack*/((${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null)
-        .orElse(new ${JavaModName}Variables.PlayerVariables())).${name})
+      /*@ItemStack*/((Objects.requireNonNullElseGet(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).${name})
     set: |
       <#include "mcitems.ftl">
       {
@@ -47,8 +46,7 @@ scopes:
     read: instance.${var.getName()} = new ItemStack(nbt.getCompoundTag("${var.getName()}"));
     write: nbt.setTag("${var.getName()}", instance.${var.getName()}.writeToNBT(new NBTTagCompound()));
     get: |
-      /*@ItemStack*/((${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null)
-        .orElse(new ${JavaModName}Variables.PlayerVariables())).${name})
+      /*@ItemStack*/((Objects.requireNonNullElseGet(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).${name})
     set: |
       <#include "mcitems.ftl">
       {
