@@ -46,7 +46,7 @@ public class ${JavaModName}Variables {
 				Objects.requireNonNullElseGet((PlayerVariables) event.player.getCapability(PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).syncPlayerVariables(event.player);
 		}
 
-		@SubscribeEvent public static void clonePlayer(PlayerEvent.Clone event) {
+		@SubscribeEvent public static void clonePlayer(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
 			// event.getOriginal().revive();
 
 			PlayerVariables original = Objects.requireNonNullElseGet((PlayerVariables) event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new);
