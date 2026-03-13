@@ -1,0 +1,39 @@
+_default: Entity
+_mcreator_map_template:
+  - "@NAMEEntity"
+  - "@JavaModNameEntities.@REGISTRYNAME"
+Pig: EntityPig
+Cow: EntityCow
+Sheep: EntitySheep
+Chicken: EntityChicken
+Rabbit: EntityRabbit
+Bat: EntityBat
+Villager: EntityVillager
+Zombie: EntityZombie
+Skeleton: EntitySkeleton
+Creeper: EntityCreeper
+Spider: EntitySpider
+Enderman: EntityEnderman
+Silverfish: EntitySilverfish
+Blaze: EntityBlaze
+MagmaCube: EntityMagmaCube
+Ghast: EntityGhast
+Slime: EntitySlime
+Witch: EntityWitch
+IronGolem: EntityIronGolem
+Snowman: EntitySnowman
+Ocelot: EntityOcelot
+Wolf: EntityWolf
+Horse: EntityHorse
+Donkey: EntityDonkey
+Mule: EntityMule
+Llama: EntityLlama
+Parrot: EntityParrot
+PolarBear: EntityPolarBear
+Shulker: EntityShulker
+Vex: EntityVex
+Turtle: EntityTurtle
+Phantom: EntityPhantom
+TraderLlama: EntityTraderLlama
+Cat: EntityCat
+Panda: EntityPanda

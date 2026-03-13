@@ -1,0 +1,27 @@
+templates:
+  - template: biome/biome.json.ftl
+    writer: json
+    name: "@RESROOT/data/@modid/biomes/@registryname.json"
+  - template: biome/tree_fruits_decorator.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/world/features/treedecorators/@NAMEFruitDecorator.java"
+    condition: hasFruits()
+  - template: biome/tree_leave_decorator.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/world/features/treedecorators/@NAMELeaveDecorator.java"
+    condition: hasVines()
+  - template: biome/tree_trunk_decorator.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/world/features/treedecorators/@NAMETrunkDecorator.java"
+    condition: hasVines()
+
+global_templates:
+  - template: elementinits/biomes.java.ftl
+    writer: java
+    condition: "${w.getGElementsOfType('biome')?size != 0}"
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameBiomes.java"
+  - template: biome/biome_extensions.java.ftl
+    writer: java
+    condition: "${w.getGElementsOfType('biome')?size != 0}"
+    name: "@SRCROOT/@BASEPACKAGEPATH/world/biome/@JavaModNameBiomeExtensions.java"
+
+localizationkeys:
+  - key: biome.@modid.@registryname
+    mapto: name

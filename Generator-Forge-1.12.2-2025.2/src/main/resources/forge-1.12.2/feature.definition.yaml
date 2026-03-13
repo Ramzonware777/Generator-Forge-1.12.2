@@ -1,0 +1,23 @@
+templates:
+  - template: feature/feature.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/world/features/@NAMEFeature.java"
+    condition: hasGenerationConditions()
+  - template: feature/feature_biome_modifier.json.ftl
+    writer: json
+    name: "@RESROOT/data/@modid/forge/biome_modifier/@registryname_biome_modifier.json"
+    condition: hasPlacedFeature()
+
+global_templates:
+  - template: elementinits/features.java.ftl
+    writer: java
+    condition: "${w.getGElementsOfType('feature')?size != 0}"
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameFeatures.java"
+  - template: feature/structure_feature.java.ftl
+    writer: java
+    condition: "${w.getGElementsOfType('feature')?filter(e -> e.getMetadata('has_nbt_structure')??)?size != 0}"
+    name: "@SRCROOT/@BASEPACKAGEPATH/world/features/@NAMEStructureFeature.java"
+    hidden: true
+
+localizationkeys:
+  - key: feature.@modid.@registryname
+    mapto: name

@@ -1,0 +1,2 @@
+(${input$entity}.getEntityWorld().rayTraceBlocks(new Vec3d(${input$entity}.posX, ${input$entity}.posY + ${input$entity}.getEyeHeight(), ${input$entity}.posZ),
+		new Vec3d(${input$entity}.posX + ${input$entity}.getLook(1.0f).x * ${input$maxdistance}, ${input$entity}.posY + ${input$entity}.getEyeHeight() + ${input$entity}.getLook(1.0f).y * ${input$maxdistance}, ${input$entity}.posZ + ${input$entity}.getLook(1.0f).z * ${input$maxdistance})).getFace())

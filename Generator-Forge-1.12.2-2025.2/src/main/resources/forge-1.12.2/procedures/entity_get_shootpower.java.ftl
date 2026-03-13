@@ -1,0 +1,1 @@
+/*@double*/(Math.sqrt(${input$projectile_entity}.motionX * ${input$projectile_entity}.motionX + ${input$projectile_entity}.motionY * ${input$projectile_entity}.motionY + ${input$projectile_entity}.motionZ * ${input$projectile_entity}.motionZ))

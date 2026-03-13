@@ -1,0 +1,50 @@
+<#include "procedures.java.ftl">
+@Mod.EventBusSubscriber({Side.CLIENT}) public class ${name}Procedure {
+	@SubscribeEvent public static void onLeftClick(PlayerInteractEvent.LeftClickEmpty event) {
+		<#assign dependenciesCode><#compress>
+			<@procedureDependenciesCode dependencies, {
+				"x": "event.getPos().getX()",
+				"y": "event.getPos().getY()",
+				"z": "event.getPos().getZ()",
+				"world": "event.getWorld()",
+				"entity": "event.getEntityPlayer()"
+			}/>
+		</#compress></#assign>
+		${JavaModName}.PACKET_HANDLER.sendToServer(new ${name}Message());
+		execute(${dependenciesCode});
+	}
+
+	public static class ${name}Message implements IMessage {
+		public ${name}Message() {}
+
+		@Override public void toBytes(ByteBuf buffer) {}
+
+		@Override public void fromBytes(ByteBuf buffer) {}
+    }
+
+	public static class ${name}MessageHandler implements IMessageHandler<${name}Message, IMessage> {
+		@Override public IMessage onMessage(${name}Message message, MessageContext context) {
+            if(context.side == Side.SERVER) {
+                context.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
+                    if (!context.getServerHandler().player.world.isBlockLoaded(context.getServerHandler().player.getPosition()))
+                        return;
+                    <#assign dependenciesCode><#compress>
+                        <@procedureDependenciesCode dependencies, {
+                            "x": "context.getServerHandler().player.posX",
+                            "y": "context.getServerHandler().player.posY",
+                            "z": "context.getServerHandler().player.posZ",
+                            "world": "context.getServerHandler().player.world",
+                            "entity": "context.getServerHandler().player"
+                        }/>
+                    </#compress></#assign>
+                    execute(${dependenciesCode});
+			    });
+		    }
+
+		    return null;
+		}
+	}
+
+	public static void registerMessage() {
+		${JavaModName}.addNetworkMessage(${name}MessageHandler.class, ${name}Message.class, Side.SERVER);
+	}

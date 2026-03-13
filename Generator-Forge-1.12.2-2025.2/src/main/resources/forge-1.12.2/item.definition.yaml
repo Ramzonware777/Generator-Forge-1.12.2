@@ -1,0 +1,32 @@
+templates:
+  - template: item/item.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/item/@NAMEItem.java"
+  - template: item/item_container.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/item/inventory/@NAMEInventoryCapability.java"
+    condition: hasInventory()
+  - template: item/item_renderer.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/client/renderer/item/@NAMEItemRenderer.java"
+    condition: hasCustomJAVAModel()
+  - template: item/overrides_model.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/client/renderer/item/@NAMEOverrideModel.java"
+    condition: hasCustomJAVAModel()
+  - template: json/item.json.ftl
+    writer: json
+    name: "@MODASSETSROOT/models/item/@registryname.json"
+  - template: json/item_cmodel.json.ftl
+    condition: hasCustomJSONModel()
+    writer: json
+    name: "@MODASSETSROOT/models/item/@registryname.json"
+  - template: json/model_item.json.ftl
+    writer: json
+    name: "@MODASSETSROOT/items/@registryname.json"
+
+global_templates:
+  - template: elementinits/items.java.ftl
+    writer: java
+    condition: "${w.getGElementsOfType('item')?size != 0}"
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameItems.java"
+
+localizationkeys:
+  - key: item.@modid.@registryname.name
+    mapto: name

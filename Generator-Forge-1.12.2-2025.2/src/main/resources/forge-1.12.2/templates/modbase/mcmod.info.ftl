@@ -1,0 +1,41 @@
+[{
+  "modid": "${settings.getModID()}",
+  "name": "${JavaConventions.escapeStringForJava(settings.getModName())}",
+<#if settings.getDescription()?has_content>
+  "description": "${JavaConventions.escapeStringForJava(settings.getDescription())}",
+</#if>
+  "version": "${settings.getCleanVersion()}",
+  "mcversion": "1.12.2",
+<#if settings.getWebsiteURL()?has_content>
+  "url": "${JavaConventions.escapeStringForJava(settings.getWebsiteURL())}",
+</#if>
+<#if settings.getUpdateURL()?has_content>
+  "updateJSON": "${JavaConventions.escapeStringForJava(settings.getUpdateURL())}",
+</#if>
+<#if settings.getAuthor()?has_content>
+  "authorList": ["${JavaConventions.escapeStringForJava(settings.getAuthor())}"],
+</#if>
+<#if settings.getCredits()?has_content>
+  "credits": "${JavaConventions.escapeStringForJava(settings.getCredits())}",
+</#if>
+<#if settings.getModPicture()?has_content>
+  "logoFile": "/logo.png",
+</#if>
+  "requiredMods": [
+<#list settings.getRequiredMods() as e>
+      "${e}"<#if e?has_next>,</#if>
+</#list>
+  ],
+  "dependencies": [
+<#list settings.getDependencies() as e>
+      "${e}",
+</#list>
+      "minecraft"
+  ],
+  "dependants": [
+<#list settings.getDependants() as e>
+      "${e}"<#if e?has_next>,</#if>
+</#list>
+  ],
+  "useDependencyInformation": "true"
+}]

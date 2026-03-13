@@ -1,0 +1,47 @@
+templates:
+  - template: plant/plant.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/@NAMEBlock.java"
+  - template: plant/plantblockentity.java.ftl
+    condition: hasTileEntity
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/entity/@NAMETileEntity.java"
+
+  # Worldgen
+  - template: plant/configured_plantgen.json.ftl
+    writer: json
+    condition: generateFeature
+    name: "@RESROOT/data/@modid/worldgen/ore/@registryname.json"
+  - template: plant/placed_plantgen.json.ftl
+    writer: json
+    condition: generateFeature
+    name: "@RESROOT/data/@modid/worldgen/ore/@registryname.json"
+
+  # Loot table
+  - template: json/block_loot_table.json.ftl
+    writer: json
+    condition: generateLootTable()
+    name: "@RESROOT/data/@modid/loot_table/blocks/@registryname.json"
+
+  # Plant item template
+  - template: json/plant_item.json.ftl
+    writer: json
+    condition: hasBlockItem
+    name: "@MODASSETSROOT/models/item/@registryname.json"
+
+  # Block model templates
+  - template: json/block_states.json.ftl
+    writer: json
+    name: "@MODASSETSROOT/blockstates/@registryname.json"
+  - template: json/block.json.ftl
+    writer: json
+    variables: "model=cross;txname=cross"
+    name: "@MODASSETSROOT/models/block/@registryname.json"
+
+global_templates:
+  - template: elementinits/plants.java.ftl
+    writer: java
+    condition: "${w.getGElementsOfType('plant')?size != 0}"
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNamePlants.java"
+
+localizationkeys:
+  - key: tile.@modid.@registryname.name
+    mapto: name

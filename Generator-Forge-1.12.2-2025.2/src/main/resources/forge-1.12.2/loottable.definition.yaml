@@ -1,0 +1,10 @@
+templates:
+  - template: loottable.json.ftl # loaded from datapack generator
+    writer: json
+    name: "@MODASSETSROOT/loot_tables/@[getName()].json"
+
+global_templates:
+  - template: elementinits/loottables.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameLoottables.java"
+
+field_exclusions: [Pool.Entry.silkTouchMode, Pool.Entry.affectedByFortune, Pool.Entry.explosionDecay]

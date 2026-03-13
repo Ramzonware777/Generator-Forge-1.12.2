@@ -1,0 +1,58 @@
+defaultvalue: ItemStack.EMPTY
+scopes:
+  local:
+    init: ${var.getType().getJavaType(generator.getWorkspace())} ${var.getName()} = ${var.getType().getDefaultValue(generator.getWorkspace())};
+    get: /*@ItemStack*/${name}
+    set: <#include "mcitems.ftl"> ${name} = ${mappedMCItemToItemStackCode(value, 1)}.copy();
+  global_session:
+    init: public static ItemStack ${var.getName()} = ItemStack.EMPTY;
+    get: /*@ItemStack*/${JavaModName}Variables.${name}
+    set: <#include "mcitems.ftl"> ${JavaModName}Variables.${name} = ${mappedMCItemToItemStackCode(value, 1)}.copy();
+  global_world:
+    init: public ItemStack ${var.getName()} = ItemStack.EMPTY;
+    read: ${var.getName()} = new ItemStack(nbt.getCompoundTag("${var.getName()}"));
+    write: nbt.setTag("${var.getName()}", ${var.getName()}.writeToNBT(new NBTTagCompound()));
+    get: /*@ItemStack*/${JavaModName}Variables.WorldVariables.get(world).${name}
+    set: |
+      <#include "mcitems.ftl">
+      ${JavaModName}Variables.WorldVariables.get(world).${name} = ${mappedMCItemToItemStackCode(value, 1)}.copy();
+      ${JavaModName}Variables.WorldVariables.get(world).syncData(world);
+  global_map:
+    init: public ItemStack ${var.getName()} = ItemStack.EMPTY;
+    read: ${var.getName()} = new ItemStack(nbt.getCompoundTag("${var.getName()}"));
+    write: nbt.setTag("${var.getName()}", ${var.getName()}.writeToNBT(new NBTTagCompound()));
+    get: /*@ItemStack*/${JavaModName}Variables.MapVariables.get(world).${name}
+    set: |
+      <#include "mcitems.ftl">
+      ${JavaModName}Variables.MapVariables.get(world).${name} = ${mappedMCItemToItemStackCode(value, 1)}.copy();
+      ${JavaModName}Variables.MapVariables.get(world).syncData(world);
+  player_lifetime:
+    init: public ItemStack ${var.getName()} = ItemStack.EMPTY;
+    read: instance.${var.getName()} = new ItemStack(nbt.getCompoundTag("${var.getName()}"));
+    write: nbt.setTag("${var.getName()}", instance.${var.getName()}.writeToNBT(new NBTTagCompound()));
+    get: |
+      /*@ItemStack*/((Objects.requireNonNullElseGet(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).${name})
+    set: |
+      <#include "mcitems.ftl">
+      {
+        ItemStack _setval = ${mappedMCItemToItemStackCode(value, 1)};
+        ${JavaModName}Variables.PlayerVariables.ifPresent(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), capability -> {
+          capability.${name} = _setval.copy();
+          capability.syncPlayerVariables(${entity});
+        });
+      }
+  player_persistent:
+    init: public ItemStack ${var.getName()} = ItemStack.EMPTY;
+    read: instance.${var.getName()} = new ItemStack(nbt.getCompoundTag("${var.getName()}"));
+    write: nbt.setTag("${var.getName()}", instance.${var.getName()}.writeToNBT(new NBTTagCompound()));
+    get: |
+      /*@ItemStack*/((Objects.requireNonNullElseGet(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), PlayerVariables::new).${name})
+    set: |
+      <#include "mcitems.ftl">
+      {
+        ItemStack _setval = ${mappedMCItemToItemStackCode(value, 1)};
+        ${JavaModName}Variables.PlayerVariables.ifPresent(${entity}.getCapability(${JavaModName}Variables.PLAYER_VARIABLES_CAPABILITY, null), capability -> {
+          capability.${name} = _setval.copy();
+          capability.syncPlayerVariables(${entity});
+        });
+      }
