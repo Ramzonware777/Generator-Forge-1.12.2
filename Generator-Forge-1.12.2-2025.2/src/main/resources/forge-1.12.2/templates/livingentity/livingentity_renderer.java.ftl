@@ -29,7 +29,7 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../procedures.java.ftl">
+<#include "../utils/procedures.java.ftl">
 package ${package}.client.renderer;
 <#assign humanoid = false>
 <#assign model = "ModelBiped">

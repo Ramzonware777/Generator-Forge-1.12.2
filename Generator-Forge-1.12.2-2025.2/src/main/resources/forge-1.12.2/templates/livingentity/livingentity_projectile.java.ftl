@@ -29,7 +29,7 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../mcitems.ftl">
+<#include "../utils/mcitems.ftl">
 package ${package}.entity;
 
 public class ${name}EntityProjectile extends EntityArrow {

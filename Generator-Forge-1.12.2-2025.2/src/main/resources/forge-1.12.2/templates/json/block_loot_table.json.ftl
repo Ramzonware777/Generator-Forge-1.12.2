@@ -1,4 +1,4 @@
-<#include "../mcitems.ftl">
+<#include "../utils/mcitems.ftl">
 <#assign defaultSlabDrops = data.getModElement().getTypeString() == "block" && data.blockBase?has_content && data.blockBase == "Slab" && !(data.customDrop?? && !data.customDrop.isEmpty())/>
 {
   "type": "minecraft:block",

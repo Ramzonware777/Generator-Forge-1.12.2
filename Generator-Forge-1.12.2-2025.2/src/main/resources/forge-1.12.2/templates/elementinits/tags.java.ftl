@@ -33,7 +33,7 @@
  *    MCreator note: This file will be REGENERATED on each build.
  */
 package ${package}.init;
-<#include "../mcitems.ftl">
+<#include "../utils/mcitems.ftl">
 
 public class ${JavaModName}Tags {
 

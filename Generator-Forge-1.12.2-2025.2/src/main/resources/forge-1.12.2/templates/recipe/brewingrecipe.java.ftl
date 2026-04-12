@@ -29,7 +29,7 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../mcitems.ftl">
+<#include "../utils/mcitems.ftl">
 package ${package}.recipes.brewing;
 
 public class ${name}BrewingRecipe implements IBrewingRecipe {

@@ -18,7 +18,7 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../triggers.java.ftl">
+<#include "../utils/triggers.java.ftl">
 
 package ${package}.item;
 

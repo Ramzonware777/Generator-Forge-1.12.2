@@ -29,7 +29,7 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../mcitems.ftl">
+<#include "../utils/mcitems.ftl">
 <#assign tabMap = w.getCreativeTabMap()>
 <#assign customTabs = tabMap.keySet()?filter(e -> e?starts_with('CUSTOM:'))>
 /*

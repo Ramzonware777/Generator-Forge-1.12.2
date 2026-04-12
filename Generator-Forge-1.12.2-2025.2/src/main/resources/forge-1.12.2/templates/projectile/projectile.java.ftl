@@ -29,8 +29,8 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../mcitems.ftl">
-<#include "../procedures.java.ftl">
+<#include "../utils/mcitems.ftl">
+<#include "../utils/procedures.java.ftl">
 package ${package}.entity;
 
 <#compress>

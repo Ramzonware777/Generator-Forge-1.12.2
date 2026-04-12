@@ -1,46 +1,45 @@
-<#--
- # MCreator (https://mcreator.net/)
- # Copyright (C) 2012-2020, Pylo
- # Copyright (C) 2020-2024, Pylo, opensource contributors
- # 
- # This program is free software: you can redistribute it and/or modify
- # it under the terms of the GNU General Public License as published by
- # the Free Software Foundation, either version 3 of the License, or
- # (at your option) any later version.
- # 
- # This program is distributed in the hope that it will be useful,
- # but WITHOUT ANY WARRANTY; without even the implied warranty of
- # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- # GNU General Public License for more details.
- # 
- # You should have received a copy of the GNU General Public License
- # along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-
 <#-- @formatter:off -->
-<#include "../procedures.java.ftl">
-<#include "../mcitems.ftl">
-<#include "../triggers.java.ftl">
+<#include "../utils/procedures.java.ftl">
+<#include "../utils/mcitems.ftl">
+<#include "../utils/triggers.java.ftl">
 
 package ${package}.item;
 
-<@javacompress>
-public class ${name}Item extends net.minecraft.item.Item {
+import net.minecraft.item.Item;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.world.World;
+
+public class ${name}Item extends Item {
 
 	public ${name}Item() {
-		super(new net.minecraft.item.Item.Properties()
-			<#if data.rarity != "COMMON">
-			.setTab(${JavaModName}CreativeTabs.${data.creativeTab})
-			</#if>
-			<#if data.hasInventory()>
-			.maxStackSize(1)
-			<#elseif data.damageCount != 0>
-			.maxDamage(${data.damageCount})
-			<#else>
-			.maxStackSize(${data.stackSize!64})
-			</#if>
-		);
-		this.setRegistryName("${modid}", "${registryname}");
+		this.setUnlocalizedName("${modid}.${registryname}");
+		<#if data.damageCount != 0>
+		this.maxStackSize = 1;
+		this.setMaxDamage(${data.damageCount});
+		<#else>
+		this.maxStackSize = ${data.stackSize!64};
+		</#if>
+		<#if data.creativeTab?has_content && data.creativeTab != "NONE">
+		this.setCreativeTab(${data.creativeTab});
+		</#if>
 	}
+	<#if hasProcedure(data.onRightClickedInAir)>
+
+	@Override
+	public ActionResult<net.minecraft.item.ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		net.minecraft.item.ItemStack itemstack = player.getHeldItem(hand);
+		int x = (int) player.posX;
+		int y = (int) player.posY;
+		int z = (int) player.posZ;
+		<@procedureCode data.onRightClickedInAir, {
+			"x": "x", "y": "y", "z": "z",
+			"world": "world", "entity": "player", "itemstack": "itemstack"
+		}/>
+		return new ActionResult<>(EnumActionResult.PASS, itemstack);
+	}
+	</#if>
 }
 <#-- @formatter:on -->

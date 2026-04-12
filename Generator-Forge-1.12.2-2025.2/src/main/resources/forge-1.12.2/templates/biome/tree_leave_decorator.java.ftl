@@ -19,7 +19,7 @@
 
 <#-- @formatter:off -->
 
-<#include "../mcitems.ftl">
+<#include "../utils/mcitems.ftl">
 
 package ${package}.world.features.treedecorators;
 

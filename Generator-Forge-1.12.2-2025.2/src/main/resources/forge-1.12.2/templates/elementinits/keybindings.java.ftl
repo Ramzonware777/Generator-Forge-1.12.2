@@ -29,7 +29,7 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../procedures.java.ftl">
+<#include "../utils/procedures.java.ftl">
 /*
  *    MCreator note: This file will be REGENERATED on each build.
  */

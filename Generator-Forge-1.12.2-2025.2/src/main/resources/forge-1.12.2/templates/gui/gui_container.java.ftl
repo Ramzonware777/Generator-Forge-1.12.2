@@ -29,8 +29,8 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../mcitems.ftl">
-<#include "../procedures.java.ftl">
+<#include "../utils/mcitems.ftl">
+<#include "../utils/procedures.java.ftl">
 <#assign slotnum = 0>
 package ${package}.world.inventory;
 

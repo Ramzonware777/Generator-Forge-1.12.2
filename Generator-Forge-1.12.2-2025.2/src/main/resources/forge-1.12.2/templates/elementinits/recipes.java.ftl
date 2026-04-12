@@ -35,7 +35,7 @@
  */
 
 package ${package}.init;
-<#include "../mcitems.ftl">
+<#include "../utils/mcitems.ftl">
 
 public class ${JavaModName}Recipes {
 

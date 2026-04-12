@@ -1,4 +1,4 @@
-<#include "../mcitems.ftl">
+<#include "../utils/mcitems.ftl">
 {
     "block": "${modid}:${registryname}",
     "variant": "default",

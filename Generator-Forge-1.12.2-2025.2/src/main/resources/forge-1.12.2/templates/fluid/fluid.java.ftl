@@ -18,7 +18,7 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../procedures.java.ftl">
+<#include "../utils/procedures.java.ftl">
 
 package ${package}.fluid;
 

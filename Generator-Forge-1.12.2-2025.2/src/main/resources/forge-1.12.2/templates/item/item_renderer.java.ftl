@@ -18,7 +18,7 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../procedures.java.ftl"
+<#include "../utils/procedures.java.ftl"
 
 @SideOnly(Side.CLIENT)
 public class ${name}ItemRenderer extends net.minecraft.client.renderer.entity.model.RendererBiped<EntityTippedArrow> {

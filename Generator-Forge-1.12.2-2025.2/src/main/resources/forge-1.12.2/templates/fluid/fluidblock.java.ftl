@@ -18,8 +18,8 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../procedures.java.ftl"
-<#include "../triggers.java.ftl">
+<#include "../utils/procedures.java.ftl"
+<#include "../utils/triggers.java.ftl">
 
 package ${package}.block;
 

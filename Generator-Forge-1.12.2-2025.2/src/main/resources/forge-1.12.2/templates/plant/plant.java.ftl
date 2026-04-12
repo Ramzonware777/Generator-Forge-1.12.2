@@ -18,10 +18,10 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../boundingboxes.java.ftl">
-<#include "../procedures.java.ftl">
-<#include "../triggers.java.ftl">
-<#include "../mcitems.ftl">
+<#include "../utils/boundingboxes.java.ftl">
+<#include "../utils/procedures.java.ftl">
+<#include "../utils/triggers.java.ftl">
+<#include "../utils/mcitems.ftl">
 
 package ${package}.block;
 

@@ -29,7 +29,7 @@
 -->
 
 <#-- @formatter:off -->
-<#include "../procedures.java.ftl">
+<#include "../utils/procedures.java.ftl">
 package ${package}.network;
 
 public class ${name}SlotMessage implements IMessage {
