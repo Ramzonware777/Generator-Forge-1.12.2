@@ -4,6 +4,11 @@ package ${package};
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -27,6 +32,7 @@ public class ${JavaModName} {
 	public static final String MODID = "${modid}";
 	public static final String VERSION = "${settings.getCleanVersion()}";
 	public static final Logger LOGGER = LogManager.getLogger(${JavaModName}.class);
+	public static SimpleNetworkWrapper PACKET_HANDLER;
 	@SidedProxy(clientSide = "${package}.network.${JavaModName}ClientProxy", serverSide = "${package}.network.${JavaModName}CommonProxy")
 	public static ${JavaModName}CommonProxy proxy;
 	@Mod.Instance(MODID)
@@ -35,6 +41,7 @@ public class ${JavaModName} {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
+		PACKET_HANDLER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 		<#if w.hasVariables()>${JavaModName}Variables.init();</#if>
 		<#if w.getGElementsOfType('procedure')?filter(e -> e.procedurexml?contains('player_left_click_air') || e.procedurexml?contains('player_right_click_empty_hand'))?size != 0>${JavaModName}Procedures.load();</#if>
 		<#if w.hasElementsOfType("keybind")>${JavaModName}KeyMappings.load();</#if>
@@ -82,6 +89,13 @@ public class ${JavaModName} {
 
 	static {
 		FluidRegistry.enableUniversalBucket();
+	}
+	private static int messageID = 0;
+
+	public static <T extends IMessage, V extends IMessage> void addNetworkMessage(Class<? extends IMessageHandler<T, V>> messageHandler, Class<T> requestMessageType, Side... sides) {
+		for (Side side : sides)
+			PACKET_HANDLER.registerMessage(messageHandler, requestMessageType, messageID, side);
+		messageID++;
 	}
 
 	private static final Collection<AbstractMap.SimpleEntry<Runnable, Integer>> workQueue = new ConcurrentLinkedQueue<>();

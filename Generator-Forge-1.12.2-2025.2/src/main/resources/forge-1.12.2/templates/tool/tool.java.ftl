@@ -24,6 +24,11 @@
 
 package ${package}.item;
 
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item.ToolMaterial;
+
 <@javacompress>
 public class ${name}Item extends 
 	<#if data.toolType == "Pickaxe">net.minecraft.item.ItemPickaxe
@@ -35,14 +40,34 @@ public class ${name}Item extends
 	<#else>net.minecraft.item.Item
 	</#if> {
 
+	public static final ToolMaterial TOOL_MATERIAL = EnumHelper.addToolMaterial("${registryname}".toUpperCase(),
+		${data.harvestLevel!0}, ${data.usageCount}, ${data.efficiency}f, ${data.damage}f, ${data.enchantability});
+
 	public ${name}Item() {
-		super(new net.minecraft.item.Item.Properties()
-			<#if data.toolType == "Pickaxe" || data.toolType == "Axe" || data.toolType == "Sword" || data.toolType == "Spade" || data.toolType == "Hoe">
-			.maxStackSize(1)
-			.maxDamage(${data.usageCount})
-			</#if>
-		);
-		this.setRegistryName("${modid}", "${registryname}");
+		<#if data.toolType == "Pickaxe" || data.toolType == "Axe" || data.toolType == "Sword" || data.toolType == "Spade" || data.toolType == "Hoe">
+		super(TOOL_MATERIAL);
+		<#elseif data.toolType == "Shield">
+		super();
+		<#else>
+		super();
+		</#if>
+		setUnlocalizedName("${registryname}");
+		setRegistryName("${registryname}");
+		<#if data.creativeTab?has_content && data.creativeTab != "NONE">
+		setCreativeTab(${data.creativeTab});
+		</#if>
+		<#if data.toolType != "Shield" && data.toolType != "">
+		maxStackSize = 1;
+		</#if>
 	}
+
+	<#if data.repairItems?has_content && data.repairItems?size gt 0>
+	@Override public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+		<#list data.repairItems as repairItem>
+		if (repair.getItem() == <@mcitem repairItem/>.getItem()) return true;
+		</#list>
+		return super.getIsRepairable(toRepair, repair);
+	}
+	</#if>
 }
 <#-- @formatter:on -->
