@@ -27,7 +27,7 @@ import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.ArrayList;
 
-@Mod(modid = ${JavaModName}.MODID, version = ${JavaModName}.VERSION)
+@Mod(modid = ${JavaModName}.MODID, name = "${settings.getModName()}", version = ${JavaModName}.VERSION, acceptedMinecraftVersions = "[1.12, 1.12.2]")
 public class ${JavaModName} {
 	public static final String MODID = "${modid}";
 	public static final String VERSION = "${settings.getCleanVersion()}";
