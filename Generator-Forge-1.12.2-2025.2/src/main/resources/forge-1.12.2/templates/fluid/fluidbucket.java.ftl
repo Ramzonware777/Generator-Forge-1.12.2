@@ -27,7 +27,7 @@ public class ${name}BucketItem extends net.minecraft.item.ItemBucket {
 	public ${name}BucketItem() {
 		super(net.minecraft.init.Blocks.<#if data.type == "WATER">WATER<#else>LAVA</#if>);
 		this.setRegistryName("${modid}", "${registryname}_bucket");
-		this.setMaxStackSize(1);
+		this.maxStackSize = 1;
 	}
 }
 <#-- @formatter:on -->
